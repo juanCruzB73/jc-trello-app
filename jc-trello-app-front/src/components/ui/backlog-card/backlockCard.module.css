@@ -1,0 +1,27 @@
+.backlogCardMainContainer{
+    width: 90%;
+    padding: .8rem;
+    display: flex;
+    background-color: #0A2144;
+    color: white;
+    justify-content: space-between;
+    margin: .8rem;
+    border-radius: .5rem;
+}
+.backlogCardMainContainerButtons{
+    display: flex;
+    justify-content: space-around;
+    width: 60%;
+}
+.backlogCardMainContainerButtons button{
+    background-color: transparent;
+    border: none;
+    padding: .2rem;
+    font-size: 1rem;
+}
+.backlockCardSelect{
+    display: flex;
+}
+.backlockCardSelectNotShow{
+    display: none;
+}

@@ -1,0 +1,18 @@
+.navBarMainContainer{
+    display: flex;
+    padding: .4rem;
+    background-color: #00232A;
+    align-items: center;
+    color: white;
+    min-height: 5%;
+    max-width: 100%;
+}
+.navBarMainContainer svg{
+    font-size: 2rem;
+    margin-right: 1rem;
+}
+@media (min-width: 768px){
+    .navBarMainContainer svg{
+        display: none;
+    }
+}

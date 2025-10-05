@@ -1,0 +1,6 @@
+backlog functionalities{
+    show card(todo)
+    show card(backlog)
+}
+sweet alert
+mejorar css

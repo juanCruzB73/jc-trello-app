@@ -1,0 +1,31 @@
+{
+    "backlog": {
+        "tasks": [
+            {
+                "id": "dcec0ad4-31e0-4279-8ccf-72bd1f20b52d",
+                "title": "Tarea backlog",
+                "description": "description tarea backlog",
+                "state": "pendiente",
+                "deadLine": "2025-03-05"
+            }
+        ]
+    },
+    "sprintList": {
+    "sprints": [
+        {
+            "id": "b0e3f34b-68c6-49eb-b059-ab251ed81629",
+            "beginLine": "2025-03-04",
+            "deadLine": "2025-03-11",
+            "name": "Sprint 122",
+            "tasks": [
+                {
+                    "id": "50699dec-3d1a-45ff-a94d-82d416eac053",
+                    "title": "Tarea 2",
+                    "description": "Estamos aca",
+                    "state": "pendiente",
+                    "deadLine": "2025-03-06"
+                }
+            ]
+        }
+    ]}
+}

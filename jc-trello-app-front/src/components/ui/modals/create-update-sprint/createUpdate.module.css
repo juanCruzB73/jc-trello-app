@@ -1,0 +1,63 @@
+.modalMainContainer{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    backdrop-filter: brightness(90%) blur(2px);
+    color: white;
+}
+.modalMainContainerNotShow{
+    display: none;
+}
+.modalContainer{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    width: 50%;
+    height: 60%;
+    max-width: 25rem;
+    background-color: #05162F;
+    padding: 1rem;
+    border: none;
+    border-radius:1rem ;
+}
+.modalForm{
+    display: flex;
+    width: 100%;
+    height: 70%;
+    flex-direction: column;
+}
+
+.input-field-sprint{
+    margin-bottom: 1rem;
+    padding: .8rem;
+    border: none;
+    border-radius: .6rem;
+}
+.sprintsModalButtons{
+    display: flex;
+    justify-content: space-between;
+}
+.modalForm button{
+    padding: 1rem;
+    background-color: white;
+    border: none;
+    width: 40%;
+    align-self: center;
+    border-radius: .6rem;
+}
+.modalForm .input-field-sprintinput-error {
+    border: 1px solid red !important;
+    margin-bottom: 1rem;
+    padding: .8rem;
+    border: none;
+    border-radius: .6rem;
+}
+.error-message{
+    color: red;
+
+}

@@ -1,0 +1,35 @@
+.taskCardContainer{
+    display: flex;
+    flex-direction: column;
+    background-color: #0A2144;
+    width: 95%;
+    padding: 1rem;
+    border-radius: .8rem;
+    margin: 1rem 0px ;
+}
+.taskCardTitle{
+    width: 40%;
+    margin-bottom: .3rem;
+}
+.taskCardButtonsContainer{
+    display: flex;
+    width: 30%;
+}
+.selectTaskCard{
+    background-color: white;
+    border: none;
+    padding: .3rem;
+    margin-right: .4rem;
+}
+.taskCardButtonsContainer button{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: transparent;
+    border: none;
+    margin-right: 1rem;
+}
+.taskCardButtonDiv{
+    display: flex;
+
+}

@@ -1,0 +1,34 @@
+#FRONTEND
+
+# Logs
+jc-trello-app-front/logs
+jc-trello-app-front/*.log
+jc-trello-app-front/npm-debug.log*
+jc-trello-app-front/yarn-debug.log*
+jc-trello-app-front/yarn-error.log*
+jc-trello-app-front/pnpm-debug.log*
+jc-trello-app-front/lerna-debug.log*
+
+jc-trello-app-front/node_modules
+jc-trello-app-front/dist
+jc-trello-app-front/dist-ssr
+jc-trello-app-front/*.local
+
+# Editor directories and files
+jc-trello-app-front/.vscode/*
+jc-trello-app-front/!.vscode/extensions.json
+jc-trello-app-front/.idea
+jc-trello-app-front/.DS_Store
+jc-trello-app-front/*.suo
+jc-trello-app-front/*.ntvs*
+jc-trello-app-front/*.njsproj
+jc-trello-app-front/*.sln
+jc-trello-app-front/*.sw?
+
+jc-trello-app-front/.env
+
+#FRONTEND
+
+jc-trello-app-back/.env
+jc-trello-app-back/node_modules
+
