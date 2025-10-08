@@ -128,12 +128,12 @@ export const CreateUpdate:FC<ICreateUpdate> = ({modalStatus}) => {
       <div className={styles.modalContainer}>
         <h1>{activeSprint?"Update Sprint":"Create Sprint"}</h1>
         <form className={styles.modalForm} onSubmit={handleSubmit}>
-          <input type="text" className={`input-field-sprint${errorMessages.titleError ? "input-error" : ""}`} placeholder='title' name='title' value={title} onChange={onInputChange}/>
-          {errorMessages.titleError && <span className="error-message">{errorMessages.titleError}</span>}
-          <input type="date" name='beginLine' value={beginLine} onChange={onInputChange}/>
-          {errorMessages.beginLineError && <span className="error-message">{errorMessages.beginLineError}</span>}
-          <input type="date" name='deadLine' value={deadLine} onChange={onInputChange}/>
-          {errorMessages.endLineError && <span className="error-message">{errorMessages.endLineError}</span>}
+          <input type="text" className={`${styles["input-field-sprint"]} ${errorMessages.titleError && styles["input-field-sprintinput-error"]}`} placeholder='title' name='title' value={title} onChange={onInputChange}/>
+          {errorMessages.titleError && <span className={styles.errorMessage}>{errorMessages.titleError}</span>}
+          <input type="date" className={`${styles["input-field-sprint"]} ${errorMessages.beginLineError && styles["input-field-sprintinput-error"]}`} name='beginLine' value={beginLine} onChange={onInputChange}/>
+          {errorMessages.beginLineError && <span className={styles.errorMessage}>{errorMessages.beginLineError}</span>}
+          <input type="date" name='deadLine' className={`${styles["input-field-sprint"]} ${errorMessages.endLineError && styles["input-field-sprintinput-error"]}`} value={deadLine} onChange={onInputChange}/>
+          {errorMessages.endLineError && <span className={styles.errorMessage}>{errorMessages.endLineError}</span>}
           <div className={styles.sprintsModalButtons}>
             <button type='submit' disabled={!buttonState}>Submit</button>
             <button type='button' onClick={() => {handleTogglePopUp("createeditsprint");setActiveSprint(null);onResetForm();}}>cancel</button>
