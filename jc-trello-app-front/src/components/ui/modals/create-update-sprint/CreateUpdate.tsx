@@ -59,16 +59,17 @@ export const CreateUpdate:FC<ICreateUpdate> = ({modalStatus}) => {
       await sprintSchema.validate({...initialStateEdit,title:title,beginLine:beginLine,deadLine:deadLine}, { abortEarly: false });
       setErrorMessages({ titleError: "", beginLineError: "", endLineError: ""});
       setButtonState(true);
-      console.log("validation worked"); 
     } catch (err: any) {
       const newErrors: IformErrors = { titleError: "", beginLineError: "", endLineError: "" };
       setButtonState(false);
+      console.log(newErrors);
       err.errors.forEach((errorElement: string) => {
         if (errorElement === "please name your sprint") newErrors.titleError = errorElement;
         if (errorElement === "please enter the begin line") newErrors.beginLineError = errorElement;
         if (errorElement === "Invalid date format") newErrors.beginLineError = errorElement;
         if (errorElement === "please enter the dead line") newErrors.endLineError = errorElement;
-        if (errorElement === "please enter the dead line") newErrors.endLineError = errorElement;
+        if (errorElement === "please enter the begin line") newErrors.beginLineError = errorElement;
+        if (errorElement === "Deadline must be later that the begin line") newErrors.endLineError = errorElement;
       });
       setErrorMessages(newErrors);
     }

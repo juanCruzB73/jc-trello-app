@@ -1,5 +1,5 @@
 export interface ISprintErros{
-  titleError:string,
-  beginLineError:string,
-  endLineError:string,
+  titleError?:string,
+  beginLineError?:string,
+  endLineError?:string,
 };
