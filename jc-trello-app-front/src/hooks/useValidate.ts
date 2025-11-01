@@ -5,16 +5,17 @@ import { Itask } from "../types/pop-ups/sprints/ITask";
 import { ISprintErros } from "../types/errors/ISprintErrors";
 
 
-interface IDataToValidate extends ISprint, Itask {}
-interface IFormErrors extends ISprintErros {}
-
+interface IDataToValidate extends Partial<ISprint>, Partial<Itask> {}interface IFormErrors extends ISprintErros {}
+interface IFormErrors extends Partial<ISprintErros> {}
 interface IValidation {
   dataToValidate: IDataToValidate;
   setButtonState: (value: boolean) => void;
   shemaName:string;
+  errorsArray:string[]
 }
 
-export const useValidate = <T extends IDataToValidate>({dataToValidate,setButtonState,shemaName}: IValidation) => { 
+export const useValidate = <T extends IDataToValidate>({dataToValidate,setButtonState,shemaName,errorsArray}: IValidation) => { 
+  console.log("data to validate",dataToValidate);
   
   //this function gos throw the names of the data to validate and add Error to it, title=>titleError 
   const initialErrors = Object.keys(dataToValidate).reduce((acc, key) => {
@@ -22,7 +23,10 @@ export const useValidate = <T extends IDataToValidate>({dataToValidate,setButton
     return acc;
   }, {} as Record<string, string>);
 
-  const [errorMessages, setErrorMessages] = useState<Record<string, string>>(initialErrors);
+  console.log("initial errors",initialErrors);
+  
+
+  const [errorMessages, setErrorMessages] = useState<IFormErrors>(initialErrors);
   //const [formValues, setFormValues] = useState<T>(dataToValidate as T);
 
   // Validation function using Yup
@@ -37,11 +41,12 @@ export const useValidate = <T extends IDataToValidate>({dataToValidate,setButton
           } catch (err: any) {
             const newerrors = { ...initialErrors };
             setButtonState(false);
-            if (err.inner) {
-              err.inner.foreach((validationerror: any) => {
-                const fieldname = validationerror.path; 
-                const message = validationerror.message; 
-                if (fieldname) newerrors[`${fieldname}error`] = message;
+            if (err.errors) {
+              err.errors.forEach((validationerror: any) => {
+                //look for a way to make this generic
+                //if (errorElement === "please name your sprint") newErrors.titleError = errorElement;
+                console.log(validationerror);
+                
               });
             }
             setErrorMessages(newerrors);

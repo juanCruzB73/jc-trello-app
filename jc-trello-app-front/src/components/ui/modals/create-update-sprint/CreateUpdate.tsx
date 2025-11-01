@@ -8,6 +8,7 @@ import { addSprint, updateSprint } from '../../../../http/sprints';
 import Swal from 'sweetalert2';
 import { fromStringToDate } from '../../../../utils/fromStringToDate';
 import { sprintSchema } from '../../../../schemas/sprintSchema';
+import { useValidate } from '../../../../hooks/useValidate';
 
 interface ICreateUpdate{
     modalStatus:boolean;
@@ -48,33 +49,13 @@ export const CreateUpdate:FC<ICreateUpdate> = ({modalStatus}) => {
 
   const {title,beginLine,deadLine,onInputChange,onResetForm}=useForm<ISprint>(initialStateEdit);
   
-  const [errorMessages, setErrorMessages] = useState<IformErrors>({
-    titleError: "",
-    beginLineError: "",
-    endLineError: ""
-  });
+  const { validate, ...errors } = useValidate({
+    dataToValidate: { title, beginLine, deadLine, tasks: [] },
+    setButtonState,
+    shemaName: "sprint"
+});
 
-  const validate = async () => {
-    try {
-      await sprintSchema.validate({...initialStateEdit,title:title,beginLine:beginLine,deadLine:deadLine}, { abortEarly: false });
-      setErrorMessages({ titleError: "", beginLineError: "", endLineError: ""});
-      setButtonState(true);
-    } catch (err: any) {
-      const newErrors: IformErrors = { titleError: "", beginLineError: "", endLineError: "" };
-      setButtonState(false);
-      console.log(newErrors);
-      err.errors.forEach((errorElement: string) => {
-        if (errorElement === "please name your sprint") newErrors.titleError = errorElement;
-        if (errorElement === "please enter the begin line") newErrors.beginLineError = errorElement;
-        if (errorElement === "Invalid date format") newErrors.beginLineError = errorElement;
-        if (errorElement === "please enter the dead line") newErrors.endLineError = errorElement;
-        if (errorElement === "please enter the begin line") newErrors.beginLineError = errorElement;
-        if (errorElement === "Deadline must be later that the begin line") newErrors.endLineError = errorElement;
-      });
-      setErrorMessages(newErrors);
-    }
-  };
-  
+
   useEffect(() => {
       validate();
   }, [title, beginLine,deadLine]);
@@ -129,12 +110,12 @@ export const CreateUpdate:FC<ICreateUpdate> = ({modalStatus}) => {
       <div className={styles.modalContainer}>
         <h1>{activeSprint?"Update Sprint":"Create Sprint"}</h1>
         <form className={styles.modalForm} onSubmit={handleSubmit}>
-          <input type="text" className={`${styles["input-field-sprint"]} ${errorMessages.titleError && wasSubmited ? styles["input-field-sprintinput-error"]:''}`} placeholder='title' name='title' value={title} onChange={onInputChange}/>
-          {errorMessages.titleError && <span className={styles.errorMessage}>{errorMessages.titleError}</span>}
-          <input type="date" className={`${styles["input-field-sprint"]} ${errorMessages.beginLineError && wasSubmited ? styles["input-field-sprintinput-error"]:''}`} name='beginLine' value={beginLine} onChange={onInputChange}/>
-          {errorMessages.beginLineError && <span className={styles.errorMessage}>{errorMessages.beginLineError}</span>}
-          <input type="date" name='deadLine' className={`${styles["input-field-sprint"]} ${errorMessages.endLineError && wasSubmited ? styles["input-field-sprintinput-error"]:''}`} value={deadLine} onChange={onInputChange}/>
-          {errorMessages.endLineError && <span className={styles.errorMessage}>{errorMessages.endLineError}</span>}
+          <input type="text" className={`${styles["input-field-sprint"]} ${errors.titleError && wasSubmited ? styles["input-field-sprintinput-error"]:''}`} placeholder='title' name='title' value={title} onChange={onInputChange}/>
+          {errors.titleError && <span className={styles.errorMessage}>{errors.titleError}</span>}
+          <input type="date" className={`${styles["input-field-sprint"]} ${errors.beginLineError && wasSubmited ? styles["input-field-sprintinput-error"]:''}`} name='beginLine' value={beginLine} onChange={onInputChange}/>
+          {errors.beginLineError && <span className={styles.errorMessage}>{errors.beginLineError}</span>}
+          <input type="date" name='deadLine' className={`${styles["input-field-sprint"]} ${errors.endLineError && wasSubmited ? styles["input-field-sprintinput-error"]:''}`} value={deadLine} onChange={onInputChange}/>
+          {errors.endLineError && <span className={styles.errorMessage}>{errors.endLineError}</span>}
           <div className={styles.sprintsModalButtons}>
             <button type='submit' disabled={!buttonState}>Submit</button>
             <button type='button' onClick={() => {handleTogglePopUp("createeditsprint");setActiveSprint(null);onResetForm();}}>cancel</button>
