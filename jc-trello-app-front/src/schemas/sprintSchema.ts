@@ -3,7 +3,7 @@ import * as yup from 'yup';
 export const sprintSchema = yup.object().shape({
     title: yup.string().required("please name your sprint"),
     beginLine: yup.string().required("please enter the begin line").test("valid-begin","Invalid date format in begin line",(value)=>!isNaN(new Date(value).getTime())),
-    deadLine: yup.string().required("please enter the dead line").test("valid-begin","Invalid date format in deadLline",(value)=>!isNaN(new Date(value).getTime())).test("is-after-begin","Deadline must be later that the begin line",function(value) {
+    deadLine: yup.string().required("please enter the dead line").test("valid-begin","Invalid date format in dead line",(value)=>!isNaN(new Date(value).getTime())).test("is-after-begin","Deadline must be later that the begin line",function(value) {
         let {beginLine}=this.parent;
         if(!beginLine || !value) return true;
 

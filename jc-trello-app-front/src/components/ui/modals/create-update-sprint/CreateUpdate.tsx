@@ -17,7 +17,7 @@ interface ICreateUpdate{
 interface IformErrors{
   titleError:string,
   beginLineError:string,
-  endLineError:string,
+  deadLineError:string,
 }
 
 const initialState:ISprint={
@@ -48,11 +48,14 @@ export const CreateUpdate:FC<ICreateUpdate> = ({modalStatus}) => {
   });
 
   const {title,beginLine,deadLine,onInputChange,onResetForm}=useForm<ISprint>(initialStateEdit);
-  
+ 
+    const errorsArray=["please name your sprint#title","please enter the begin line#beginLine","Invalid date format in begin line#beginLine","please enter the dead line#deadLine","Invalid date format in dead line#deadLine","Deadline must be later that the begin line#deadLine"];
+
   const { validate, ...errors } = useValidate({
     dataToValidate: { title, beginLine, deadLine, tasks: [] },
     setButtonState,
-    shemaName: "sprint"
+    shemaName: "sprint",
+    errorsArray
 });
 
 
@@ -114,8 +117,8 @@ export const CreateUpdate:FC<ICreateUpdate> = ({modalStatus}) => {
           {errors.titleError && <span className={styles.errorMessage}>{errors.titleError}</span>}
           <input type="date" className={`${styles["input-field-sprint"]} ${errors.beginLineError && wasSubmited ? styles["input-field-sprintinput-error"]:''}`} name='beginLine' value={beginLine} onChange={onInputChange}/>
           {errors.beginLineError && <span className={styles.errorMessage}>{errors.beginLineError}</span>}
-          <input type="date" name='deadLine' className={`${styles["input-field-sprint"]} ${errors.endLineError && wasSubmited ? styles["input-field-sprintinput-error"]:''}`} value={deadLine} onChange={onInputChange}/>
-          {errors.endLineError && <span className={styles.errorMessage}>{errors.endLineError}</span>}
+          <input type="date" name='deadLine' className={`${styles["input-field-sprint"]} ${errors.deadLineError && wasSubmited ? styles["input-field-sprintinput-error"]:''}`} value={deadLine} onChange={onInputChange}/>
+          {errors.deadLineError && <span className={styles.errorMessage}>{errors.deadLineError}</span>}
           <div className={styles.sprintsModalButtons}>
             <button type='submit' disabled={!buttonState}>Submit</button>
             <button type='button' onClick={() => {handleTogglePopUp("createeditsprint");setActiveSprint(null);onResetForm();}}>cancel</button>

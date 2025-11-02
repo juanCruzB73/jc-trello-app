@@ -15,16 +15,11 @@ interface IValidation {
 }
 
 export const useValidate = <T extends IDataToValidate>({dataToValidate,setButtonState,shemaName,errorsArray}: IValidation) => { 
-  console.log("data to validate",dataToValidate);
   
-  //this function gos throw the names of the data to validate and add Error to it, title=>titleError 
   const initialErrors = Object.keys(dataToValidate).reduce((acc, key) => {
     acc[`${key}Error`] = "";
     return acc;
   }, {} as Record<string, string>);
-
-  console.log("initial errors",initialErrors);
-  
 
   const [errorMessages, setErrorMessages] = useState<IFormErrors>(initialErrors);
   //const [formValues, setFormValues] = useState<T>(dataToValidate as T);
@@ -43,22 +38,26 @@ export const useValidate = <T extends IDataToValidate>({dataToValidate,setButton
             setButtonState(false);
             if (err.errors) {
               err.errors.forEach((validationerror: any) => {
-                //look for a way to make this generic
-                //if (errorElement === "please name your sprint") newErrors.titleError = errorElement;
-                console.log(validationerror);
-                
-              });
+                let final:any = {};
+                errorsArray.forEach(message=>{
+                    const errorWithField = message.split("#");
+                    const fieldErrorAppended=errorWithField[1].concat("Error");
+                    final[fieldErrorAppended]=errorWithField[0];
+                    if(validationerror==errorWithField[0]) {
+                        newerrors[fieldErrorAppended]=validationerror
+                    }
+                });
+               });
+           setErrorMessages(newerrors);
             }
-            setErrorMessages(newerrors);
-          }
-        break;
+           }
+           break;
         default:
           console.log("you didnt pass a schema type retard");
       }
   }
 
   return{
-    ...initialErrors,
     ...errorMessages,
     validate
   }
