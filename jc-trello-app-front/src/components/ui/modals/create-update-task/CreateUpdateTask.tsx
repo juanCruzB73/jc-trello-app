@@ -1,10 +1,11 @@
-import { FC, FormEvent, useState } from 'react';
+import { FC, FormEvent, useState,useEffect } from 'react';
 import { Itask } from '../../../../types/pop-ups/sprints/ITask';
 import styles from './createUpdateTask.module.css';
 import { popUpStore } from '../../../../store/PopUpsStore';
 import { useForm } from '../../../../hooks/useForm';
 import { addTask, updateTask } from '../../../../http/tasks';
 import { taskStore } from '../../../../store/TaskStore';
+import {useValidate} from "../../../../hooks/useValidate"
 import Swal from 'sweetalert2';
 
 interface ICreateUpdateTask{
@@ -70,6 +71,24 @@ export const CreateUpdateTask:FC<ICreateUpdateTask> = ({modalStatus}) => {
         }
         handleTogglePopUp("createedittask")
       }
+  const errorsArray=["please name your task#title","please enter the dead line#deadLine","Invalid date format#deadLine"]
+  const [buttonState,setButtonState]=useState(false); 
+  const {validate,...errors}=useValidate({
+      dataToValidate:{
+        title,
+        description,
+        deadLine
+      },
+      setButtonState,
+      schemaName:"task",
+      errorsArray
+  });
+
+  useEffect(()=>{
+   console.log(errors);
+   validate(); 
+  },[title,description,deadLine])
+
 
     return (
       <div className={modalStatus?styles.taskModalMainConainer:styles.taskModalMainConainerNotShow}>
@@ -77,9 +96,12 @@ export const CreateUpdateTask:FC<ICreateUpdateTask> = ({modalStatus}) => {
               <h1>{activeTask?"Update task":"Create task"}</h1>
               <form className={styles.taskModalForm} onSubmit={handleSubmit}>
                   <input type="text" name='title' value={title} onChange={onInputChange} placeholder='title'/>
+
+            {errors.titleError && <span className={styles.errorMessage}>{errors.titleError}</span>}
                   <input type="text" name='description' value={description} onChange={onInputChange} placeholder='description' />
                   <input type="date" name='deadLine' value={deadLine} onChange={onInputChange}/>
                   
+            {errors.deadLineError && <span className={styles.errorMessage}>{errors.deadLineError}</span>}
                   <div className={styles.taskModalButtons}>
                       <button>Send</button>
                       <button type='button' onClick={() => {onResetForm();setActiveTask(null);handleTogglePopUp("createedittask")}}>cancel</button>

@@ -5,4 +5,3 @@ errorsArray.forEach(message=>{
     const fieldErrorAppended=errorWithField[1].concat("Error");
     final[fieldErrorAppended]=errorWithField[0];
 });
-console.log(final);

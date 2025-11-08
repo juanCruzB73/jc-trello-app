@@ -1,14 +1,14 @@
-import { FC, FormEvent, useState } from 'react';
-import styles from './createUpdateBacklog.module.css';
-import { popUpStore } from '../../../../store/PopUpsStore';
+import { FC, FormEvent, useState,useEffect } from 'react'; 
+import styles from './createUpdateBacklog.module.css'; 
+import { popUpStore } from '../../../../store/PopUpsStore'; 
 import { useForm } from '../../../../hooks/useForm';
-import { backlogStore } from '../../../../store/BacklogStore';
+import { backlogStore } from '../../../../store/BacklogStore'; 
 import { addBacklog, updateBacklog } from '../../../../http/backlog';
+import {useValidate} from "../../../../hooks/useValidate"
 import Swal from 'sweetalert2';
 
 
-interface ICreateUpdateBacklog{
-    modalStatus:boolean;
+interface ICreateUpdateBacklog{ modalStatus:boolean;
 }
 
 export const CreateUpdateBacklog:FC<ICreateUpdateBacklog> = ({modalStatus}) => {
@@ -16,6 +16,7 @@ export const CreateUpdateBacklog:FC<ICreateUpdateBacklog> = ({modalStatus}) => {
   const setChangePopUpStatus = popUpStore((state) => (state.setChangePopUpStatus));
   const activeBacklog = backlogStore((state) => (state.activeBacklogTasks));
   const setActiveBacklogs = backlogStore((state) => (state.setActiveBacklogTasks));
+  const [buttonState,setButtonState]=useState(false);
   const [radiusState,setRadiusState]=useState("todo");
 
   const [initialStateEdit,setInitialStateEdit]=useState({
@@ -23,13 +24,27 @@ export const CreateUpdateBacklog:FC<ICreateUpdateBacklog> = ({modalStatus}) => {
     description:activeBacklog?activeBacklog.description:"",
     deadLine:activeBacklog?activeBacklog.deadLine:"",
     state:activeBacklog?activeBacklog.state:"todo"
+  }); const {title,description,deadLine,onInputChange,onResetForm}=useForm(initialStateEdit);
+    
+  const errorsArray=["please name your backlog#title","Invalid date format#deadLine"]; 
+  const {validate,...errors}=useValidate({
+      dataToValidate:{
+        title,
+        description,
+        deadLine
+      },
+      setButtonState,
+      schemaName:"backlog",
+      errorsArray
   });
   
-  const {title,description,deadLine,onInputChange,onResetForm}=useForm(initialStateEdit);
-
   const handleTogglePopUp = (popUpName: string) => {
     setChangePopUpStatus(popUpName); 
   };
+  
+  useEffect(()=>{
+    validate();
+  },[title,deadLine,description]);
 
   const handleCrate=async()=>{
           try{
@@ -78,9 +93,13 @@ export const CreateUpdateBacklog:FC<ICreateUpdateBacklog> = ({modalStatus}) => {
         <div className={styles.createUpdateBacklogContainer}>
           <h1>{activeBacklog?"Edit backlog task":"Create backlog task"}</h1>
           <form className={styles.createeditbacklogFormContainer} onSubmit={handleSubmit}>
-            <input type="text" placeholder='title' name='title' value={title} onChange={onInputChange}/>
+            <input type="text" className={`${styles["input-field-backlog"]} ${errors.titleError ? styles["input-field-backloginput-error"]:''}`} placeholder='title' name='title' value={title} onChange={onInputChange}/>
+           
+            {errors.titleError && <span className={styles.errorMessage}>{errors.titleError}</span>}
             <input type="text" placeholder='description' name='description' value={description} onChange={onInputChange}/>
             <input type="date" name='deadLine' value={deadLine} onChange={onInputChange}/>
+
+            {errors.deadLineError && <span className={styles.errorMessage}>{errors.deadLineError}</span>}
             <div className={styles.taskModalButtons}></div>
             <div className={styles.createeditbacklogButtonContainer}>
               <button type='submit' >submit</button>

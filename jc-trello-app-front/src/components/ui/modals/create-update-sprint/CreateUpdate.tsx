@@ -54,7 +54,7 @@ export const CreateUpdate:FC<ICreateUpdate> = ({modalStatus}) => {
   const { validate, ...errors } = useValidate({
     dataToValidate: { title, beginLine, deadLine, tasks: [] },
     setButtonState,
-    shemaName: "sprint",
+    schemaName: "sprint",
     errorsArray
 });
 
