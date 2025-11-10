@@ -10,9 +10,9 @@ import { backlogStore } from '../../../store/BacklogStore';
 import { deleteBacklog } from '../../../http/backlog';
 import { sprintStore } from '../../../store/SprintStore';
 import { ISprint } from '../../../types/pop-ups/sprints/ISprint';
-import { getSprintById, updateSprint } from '../../../http/sprints';
 import Swal from 'sweetalert2';
 import { addTask } from '../../../http/tasks';
+import { getSprintById, updateSprint } from '../../../http/sprints';
 
 interface IBacklogCard{
   backlog:Itask
@@ -38,7 +38,7 @@ export const BacklogCard:FC<IBacklogCard> = ({backlog}) => {
       text: 'This action cannot be undone!',
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonColor: '#d33',
+      confirmButtonColor: '#d33', 
       cancelButtonColor: '#3085d6',
       confirmButtonText: 'Yes, delete it!',
       cancelButtonText: 'Cancel'
@@ -50,13 +50,31 @@ export const BacklogCard:FC<IBacklogCard> = ({backlog}) => {
     });
   };
   
+const handleMoveBacklog = async (sprintId: string) => {
+  try {
+    const sprint = await getSprintById(sprintId);
 
-  const handleMoveBacklog=async(sprintId:string)=>{
-    await getSprintById(sprintId);
-    await addTask(backlog)
-    //await updateSprint(sprint);
-    await deleteBacklog(backlog._id);
+    if (!sprint) {
+      throw new Error("Sprint not found: " + sprintId);
+    }
+
+    const newTask = await addTask(backlog);
+
+    // Make sure `sprint.tasks` exists
+    await updateSprint({
+      ...sprint,
+      tasks: [...(sprint.tasks || []), newTask],
+    });
+
+    await deleteBacklog(backlog._id!);
+  } catch (error) {
+    console.error("Error moving backlog:", error);
   }
+};
+
+
+
+
   
 
   const handleSelectOption=async(event:React.ChangeEvent<HTMLSelectElement>)=>{

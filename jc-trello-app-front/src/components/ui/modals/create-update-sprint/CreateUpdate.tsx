@@ -6,8 +6,6 @@ import { ISprint } from '../../../../types/pop-ups/sprints/ISprint';
 import { sprintStore } from '../../../../store/SprintStore';
 import { addSprint, updateSprint } from '../../../../http/sprints';
 import Swal from 'sweetalert2';
-import { fromStringToDate } from '../../../../utils/fromStringToDate';
-import { sprintSchema } from '../../../../schemas/sprintSchema';
 import { useValidate } from '../../../../hooks/useValidate';
 
 interface ICreateUpdate{

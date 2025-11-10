@@ -12,14 +12,26 @@ export const getSprints=async()=>{
         console.error(error);
     }
 };
-export const getSprintById=async(sprintId:string)=>{  
-    try{
-        const response = await fetch(`${API_URL}/${sprintId}`);
-        let data = await response.json();
-        return sprintStore.getState().setActiveSprint(data.sprint);
-    }catch(error){
-        console.error(error);
+export const getSprintById = async (id: string): Promise<ISprint | undefined> => {
+  try {
+    const response = await fetch(`${API_URL}/${id}`);
+
+    if (!response.ok) {
+      console.error("Failed to fetch sprint:", response.status);
+      return undefined;
     }
+
+    const data = await response.json();
+
+    // If backend returns { sprint: { ... } }
+    if (data.sprint) return data.sprint;
+
+    // If backend returns the sprint directly
+    return data;
+  } catch (error) {
+    console.error("Error fetching sprint by ID:", error);
+    return undefined;
+  }
 };
 export const addSprint=async(sprintIn:ISprint)=>{
     try{    

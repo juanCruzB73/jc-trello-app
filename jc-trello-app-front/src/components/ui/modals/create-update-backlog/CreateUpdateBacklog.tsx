@@ -97,9 +97,7 @@ export const CreateUpdateBacklog:FC<ICreateUpdateBacklog> = ({modalStatus}) => {
            
             {errors.titleError && <span className={styles.errorMessage}>{errors.titleError}</span>}
             <input type="text" placeholder='description' name='description' value={description} onChange={onInputChange}/>
-            <input type="date" name='deadLine' value={deadLine} onChange={onInputChange}/>
 
-            {errors.deadLineError && <span className={styles.errorMessage}>{errors.deadLineError}</span>}
             <div className={styles.taskModalButtons}></div>
             <div className={styles.createeditbacklogButtonContainer}>
               <button type='submit' >submit</button>

@@ -1,4 +1,3 @@
-import { addBacklogController, deleteBacklogController, getBacklogsController, updateBacklogController } from "../data/backlogsController";
 import { Itask } from "../types/pop-ups/sprints/ITask";
 import { backlogStore } from "../store/BacklogStore";
 

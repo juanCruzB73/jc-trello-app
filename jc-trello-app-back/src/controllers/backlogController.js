@@ -58,7 +58,7 @@ const editTaskBacklog=async(req,res)=>{
         if (updatedData.title !== undefined) task.title = updatedData.title;
         if (updatedData.description !== undefined) task.description = updatedData.description;
         if (updatedData.state !== undefined) task.state = updatedData.state;
-        if (updatedData.deadLine !== undefined) task.deadLine = updatedData.deadLine;
+        //if (updatedData.deadLine !== undefined) task.deadLine = updatedData.deadLine;
 
         await backlog.save();
 

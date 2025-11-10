@@ -4,7 +4,7 @@ const taskSchema=new mongoose.Schema({
     title:{type:String,required:true},
     description:{type:String},
     state:{type:String,enum:["todo","inprogress","completed"],requires:true},
-    deadLine:{type:String,required:true},
+    //deadLine:{type:String,required:true},
 });
 
 const backlogSchema=new mongoose.Schema({

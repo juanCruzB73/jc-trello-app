@@ -3,5 +3,4 @@ export interface Itask{
     title: string,
     description: string,
     state: string,
-    deadLine: string
 }
