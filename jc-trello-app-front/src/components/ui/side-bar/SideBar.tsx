@@ -41,6 +41,7 @@ export const SideBar:FC<ISideBar> = ({sidebarStatus}) => {
           <h2>Your sprints</h2>
           <h3 onClick={() => {handleTogglePopUp("createeditsprint");setActiveSprint(null)}}><FaPlus /></h3>
         </div>
+        <div className={styles.divider}></div>
         <div className={styles.sideBarListContent}>
           {
             sprints.map(sprint=>(

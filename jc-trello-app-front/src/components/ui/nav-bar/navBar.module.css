@@ -1,16 +1,24 @@
 .navBarMainContainer{
     display: flex;
     padding: .4rem;
-    background-color: #00232A;
+    background-image: linear-gradient(to right, #3678db, #42b3e7);
+    background-color: #3e78ce;
     align-items: center;
     color: white;
     min-height: 5%;
     max-width: 100%;
 }
+
 .navBarMainContainer svg{
     font-size: 2rem;
     margin-right: 1rem;
 }
+
+.navBarMainContainer h2{
+    padding-left: 1rem;
+}
+
+
 @media (min-width: 768px){
     .navBarMainContainer svg{
         display: none;

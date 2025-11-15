@@ -12,7 +12,7 @@ export const NavBar = () => {
   return (
     <div className={styles.navBarMainContainer}>
       <FiMenu onClick={() => handleTogglePopUp("hamburgerbutton")} />
-      <h2>TODO APP</h2>
+      <h2>TO-DO APP</h2>
     </div>
   );
 }

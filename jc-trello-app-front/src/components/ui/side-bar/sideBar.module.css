@@ -14,7 +14,7 @@
     height: 100%;
     display: flex;
     flex-direction: column;
-    background-color: #00181C; 
+    background-color: #040c14; 
 }
 .sideBarContainer button{
     max-width: 30vw;
@@ -33,8 +33,8 @@
     display: flex;
     align-items: center;
     width: 80%;
-    height: 10%;
     margin-left: 1rem;
+    padding-bottom: 1vh;
 }
 .sideBarTitle h3{
     margin-top: 10px;
@@ -50,6 +50,15 @@
     display: flex;
     flex-direction: column;
 }
+
+.divider{
+    width: 100%;
+    height: 1px;
+    background-color: #383f5e;
+    border: none;
+    margin-bottom: 0.75rem;
+}
+
 @media (min-width: 768px){
     .sideBarMainContainer{
         position: relative;
