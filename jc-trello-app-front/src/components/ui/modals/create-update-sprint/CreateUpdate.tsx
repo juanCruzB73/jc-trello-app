@@ -64,7 +64,6 @@ export const CreateUpdate:FC<ICreateUpdate> = ({modalStatus}) => {
   const handleCrate=async()=>{
     try{
       const data={title,beginLine,deadLine,tasks:[]}
-//      console.log(data);
       await addSprint(data);
     }catch(err){
       console.error(err);

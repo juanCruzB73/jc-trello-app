@@ -49,21 +49,27 @@ export const BacklogCard:FC<IBacklogCard> = ({backlog}) => {
       }
     });
   };
-  
+
 const handleMoveBacklog = async (sprintId: string) => {
   try {
     const sprint = await getSprintById(sprintId);
-
+    
     if (!sprint) {
       throw new Error("Sprint not found: " + sprintId);
     }
+    setActiveSprint(sprint);
+    
+    await addTask(backlog);
 
-    const newTask = await addTask(backlog);
-
+    console.log({
+      ...sprint,
+      tasks: [...(sprint.tasks || []), backlog],
+    });
+    
     // Make sure `sprint.tasks` exists
     await updateSprint({
       ...sprint,
-      tasks: [...(sprint.tasks || []), newTask],
+      tasks: [...(sprint.tasks || []), backlog],
     });
 
     await deleteBacklog(backlog._id!);

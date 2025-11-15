@@ -37,14 +37,11 @@ export const useValidate = <T extends IDataToValidate>({
       console.warn(`Schema "${schemaName}" not found`);
       return;
     }
-    console.log(schema) 
-    console.log(dataToValidate) 
     try {
       await schema.validate(
         { ...dataToValidate }, { abortEarly: false }
       );
       // reset errors if all valid
-      console.log("no errors")
       setErrorMessages(initialErrors);
       setButtonState(true);
     } catch (err: any) {
@@ -53,7 +50,6 @@ export const useValidate = <T extends IDataToValidate>({
       
       if (err.errors) { 
         err.errors.forEach((validationerror: any) => {
-          console.log(err.errors)
           errorsArray.forEach((message) => {
             const [errorMsg, field] = message.split("#");
             const fieldError = `${field}Error`;
