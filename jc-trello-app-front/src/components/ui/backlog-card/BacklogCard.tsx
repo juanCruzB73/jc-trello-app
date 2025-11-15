@@ -61,17 +61,6 @@ const handleMoveBacklog = async (sprintId: string) => {
     
     await addTask(backlog);
 
-    console.log({
-      ...sprint,
-      tasks: [...(sprint.tasks || []), backlog],
-    });
-    
-    // Make sure `sprint.tasks` exists
-    await updateSprint({
-      ...sprint,
-      tasks: [...(sprint.tasks || []), backlog],
-    });
-
     await deleteBacklog(backlog._id!);
   } catch (error) {
     console.error("Error moving backlog:", error);
