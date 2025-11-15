@@ -91,10 +91,14 @@ export const TaskScreen = () => {
                 )}
               </form>*/}
             </div>
-            <h1 className={ !activeSprint?styles.taskScreenNoActiveSprint:styles.taskScreenActiveSprint}>Select a sprint to display the tasks</h1>
+            <h2 className={ !activeSprint?styles.taskScreenNoActiveSprint:styles.taskScreenActiveSprint}>Select a sprint to display the tasks</h2>
+            <div className={styles.sprintDescriptionContainer}>
+                <p>Me dio paja hacer la descripcion mildis te amoo</p>
+              </div>
             <div className={styles.taskScreenBoardsBackground}>
+
               <div className={styles.taskScreenBoard}>
-                <h2>TODO</h2>
+                <h2>TO-DO</h2>
                 <div className={styles.taskScreenCardContainer}>
                   {todoTasks.map((task:Itask)=><TaskCard task={task} key={task._id}/>)}
                 </div>

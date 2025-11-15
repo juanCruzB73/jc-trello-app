@@ -17,12 +17,14 @@
     height: 100%;
 }
 .taskScreenTitle{
-    display: flex;
-    background-color: #05162F;
+    display:flex;
+    background-color: #09121d;
     color: white;
     width: 100%;
-    height: 10% 
+    height: 6vh;
+    justify-content: center;
 }
+
 .taskScreenNoActiveSprint{
     background-color: #091930;
     color: white;
@@ -48,17 +50,17 @@
 .taskScreenBoardsBackground{
     display: flex;
     flex-direction: column;
-    background-color: #091930;
+    background-color: #09121d;
     overflow-y: auto;
     align-items: center;
     height: 100%;
 }
 .taskScreenBoard{
-    background-color: #010D0D;
+    background-image: linear-gradient(#144579, #0f273f);
     border-radius: .8rem;
     padding: 1rem;
     color: white;
-    min-height: 70%;
+    min-height: 20%;
     max-height: 70%;
     width: 80%;
     margin: 1rem;
@@ -66,6 +68,7 @@
     align-items: center;
     flex-direction: column;
     overflow-y: auto;
+    box-shadow: 0px 10px 15px #020913;
 }
 .taskScreenCardContainer{
     display: flex;
@@ -75,6 +78,15 @@
     align-items: center;
 
 }
+
+.sprintDescriptionContainer{
+    display:flex;
+    text-align: center;
+    justify-content: center;
+    background-color: #09121d;
+    color: #a3b9e2;
+}
+
 @media (min-width: 768px){
     .taskScreenContentMainContainer{
         width: 100%;

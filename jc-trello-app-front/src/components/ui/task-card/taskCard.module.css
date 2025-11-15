@@ -1,14 +1,15 @@
 .taskCardContainer{
     display: flex;
     flex-direction: column;
-    background-color: #0A2144;
+    background-color: #3e78ce;
     width: 95%;
     padding: 1rem;
     border-radius: .8rem;
     margin: 1rem 0px ;
+    box-shadow: 0px 5px 15px #07172c;
 }
 .taskCardTitle{
-    width: 40%;
+    width: 80%;
     margin-bottom: .3rem;
 }
 .taskCardButtonsContainer{

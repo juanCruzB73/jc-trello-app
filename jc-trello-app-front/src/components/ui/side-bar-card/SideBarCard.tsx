@@ -22,7 +22,7 @@ export const SideBarCard:FC<ISideBarCard> = ({sprint}) => {
 
     const setChangePopUpStatus = popUpStore((state) => (state.setChangePopUpStatus));
     const setActiveSprint  = sprintStore((state) => (state.setActiveSprint ));
-    
+    const activeSprint  = sprintStore((state) => (state.activeSprint ));
     const handleTogglePopUp = (popUpName: string) => {
       setChangePopUpStatus(popUpName); 
     };
@@ -50,7 +50,7 @@ export const SideBarCard:FC<ISideBarCard> = ({sprint}) => {
     return (
       <div className={styles.sideBarCardMainContainer}>
         
-        <div className={styles.sideBarButtons}>
+        <div className={`${activeSprint == sprint ? styles["sideBarActiveButton"]:styles["sideBarButtons"]}`} >
             <h3><FaLayerGroup/></h3>
             <h4 style={{cursor: "pointer"}} onClick={()=>{setActiveSprint(sprint);navigate(`/tasks?sprintid=${sprint._id}`)}}>{sprint.title}</h4>
             <h3 onClick={()=>setSeeMore(!seeMore)}><FaArrowDown style={{cursor: "pointer"}}/></h3>
