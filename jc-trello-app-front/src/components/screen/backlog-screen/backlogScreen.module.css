@@ -60,6 +60,33 @@
     gap:1vw;
     align-content: baseline;
 }
+
+.createTaskButtonContainer{
+    position:fixed;
+    bottom: 2vh;
+    right:2vw;
+}
+
+.createTaskButtonContainer button{
+    display: flex;
+    width:4rem;
+    height:4rem;
+    border:none;
+    border-radius: 1rem;
+    font-size: 50px;
+    font-weight: 500;
+    align-items: center;
+    justify-content: center;
+    background-color: #4fc2f7;
+    color:#09121d;
+    transition: transform 0.15s ease-in-out;
+}
+
+.createTaskButtonContainer button:hover{
+    transform: scale(1.1);
+    align-items: center;
+}
+
 @media (min-width: 768px){
     .springScreenTaskContainer{
         min-width: 70%;

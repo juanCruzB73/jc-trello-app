@@ -34,13 +34,16 @@ export const BackogsScreen = () => {
               <h2>Backlogs</h2>
               <h4>Tasks in backlog</h4>
             </div>
-            <button type='button' onClick={()=>{handleTogglePopUp("createeditbacklog");setActiveBacklogs(null)}}>Añadir tarea</button>
+            
           </div>
           <div className={styles.springScreenListTaskContainer}>
             <div className={styles.springScreenListTask}>
               {backlogs.map((backlog:Itask)=>(
                 <BacklogCard key={backlog._id} backlog={backlog}/>
               ))}
+              <div className={styles.createTaskButtonContainer}>
+                <button type='button' onClick={()=>{handleTogglePopUp("createeditbacklog");setActiveBacklogs(null)}}>+</button>
+              </div>
             </div>
           </div>
         </div>
