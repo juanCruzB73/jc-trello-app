@@ -81,7 +81,10 @@ const handleMoveBacklog = async (sprintId: string) => {
 
   return (
     <div className={styles.backlogCardMainContainer}>
+      <div className={styles.backlogCardTitles}>
       <h3>{backlog.title}</h3>
+      <p>{backlog.description?backlog.description:"No description given."}</p>
+      </div>
       <div className={styles.backlogCardMainContainerButtons}>
         <select name="selectOption" value={selectOption} onChange={handleSelectOption}  className={sentTo?styles.backlockCardSelect:styles.backlockCardSelectNotShow}>
           <option value="">Select Sprint</option>
@@ -91,10 +94,12 @@ const handleMoveBacklog = async (sprintId: string) => {
               ))
             }
           </select>
-        <button type='button' style={{backgroundColor:"white",border:"none",borderRadius:".5rem"}} onClick={()=>setSendTo(!sentTo)}>{!sentTo?"Sent to...":"Cancel"} <BsBoxes /></button>
-        <button type='button' style={{color:"white"}} onClick={()=>{setActiveBacklogs(backlog);handleTogglePopUp("seebacklog")}} ><IoEye /></button>
-        <button type='button' onClick={()=>{handleTogglePopUp("createeditbacklog");setActiveBacklogs(backlog)}} style={{color:"white"}}><HiPencil /></button>
-        <button type='button' style={{color:"rgba(233, 11, 11, 0.747) "}} onClick={()=>{backlog._id&&handleDelete(backlog._id)}}><FaRegTrashAlt /></button>
+          <div className={styles.backlogCardEditButtons}>
+        <button type='button' className={styles.backlogCardSendToButton} onClick={()=>setSendTo(!sentTo)}>{!sentTo?"Sent to...":"Cancel"} <BsBoxes /></button>
+        <button type='button' className={styles.backlogCardIconButtons} style={{color:"white"}} onClick={()=>{setActiveBacklogs(backlog);handleTogglePopUp("seebacklog")}} ><IoEye /></button>
+        <button type='button' className={styles.backlogCardIconButtons} onClick={()=>{handleTogglePopUp("createeditbacklog");setActiveBacklogs(backlog)}} style={{color:"white"}}><HiPencil /></button>
+        <button type='button' className={styles.backlogCardIconButtons} style={{color:"rgba(233, 11, 11, 0.747) "}} onClick={()=>{backlog._id&&handleDelete(backlog._id)}}><FaRegTrashAlt /></button>
+        </div>
       </div>
     </div>
   )

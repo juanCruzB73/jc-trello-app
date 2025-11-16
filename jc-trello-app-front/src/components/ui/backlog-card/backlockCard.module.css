@@ -1,20 +1,22 @@
 .backlogCardMainContainer{
-    width: 90%;
+    height: 30%;
     padding: .8rem;
     display: flex;
-    background-color: #0A2144;
+    flex-direction: column;
+    background-color: #3e78ce;
     color: white;
     justify-content: space-between;
-    margin: .8rem;
     border-radius: .5rem;
 }
 .backlogCardMainContainerButtons{
     display: flex;
-    justify-content: space-around;
-    width: 60%;
+    justify-content: space-between;
+    flex-direction: column;
+    width: 100%;
+    align-items: end;
+    height: 20%;
 }
 .backlogCardMainContainerButtons button{
-    background-color: transparent;
     border: none;
     padding: .2rem;
     font-size: 1rem;
@@ -24,4 +26,29 @@
 }
 .backlockCardSelectNotShow{
     display: none;
+}
+
+.backlogCardSendToButton{
+    background-color:white;
+    border: none;
+    border-radius: .5rem;
+}
+
+.backlogCardIconButtons{
+    background-color: transparent;
+    margin-left: 1vw;
+}
+
+.backlogCardEditButtons{
+    display: flex;
+    width: 100%;
+    align-self: flex-end;
+}
+
+.backlogCardTitles{
+    height: 30%;
+}
+
+.backlogCardTitles h2{
+    padding-bottom: .3vh;
 }
