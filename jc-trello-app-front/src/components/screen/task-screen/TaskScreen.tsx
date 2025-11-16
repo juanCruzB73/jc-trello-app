@@ -93,7 +93,7 @@ export const TaskScreen = () => {
             </div>
             <h2 className={ !activeSprint?styles.taskScreenNoActiveSprint:styles.taskScreenActiveSprint}>Select a sprint to display the tasks</h2>
             <div className={styles.sprintDescriptionContainer}>
-                <p>{activeSprint?activeSprint?.description:""}</p>
+                <p>{activeSprint?.description?activeSprint?.description:"No description given."}</p>
               </div>
             <div className={styles.taskScreenBoardsBackground}>
 
