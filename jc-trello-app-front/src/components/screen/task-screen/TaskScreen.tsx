@@ -30,49 +30,27 @@ export const TaskScreen = () => {
     setChangePopUpStatus(popUpName); 
   };
 
-  useEffect(()=>{
-    const todo: Itask[] = [];
-    const inProgress: Itask[] = [];
-    const completed: Itask[] = [];
-    
+  useEffect(() => {
+  if (sprintId && !activeSprint) {
+    getSprintById(sprintId);
+  }
+}, [sprintId]);
 
-    if(!activeSprint && !sprintId) {
-      setTodoTasks(todo);
-      setInProgressTasks(inProgress);
-      setCompletedTask(completed);
-      return
-    };
-    
-    if(!activeSprint && sprintId){
-      const setActive=async()=>{
-        await getSprintById(sprintId);
-      }
-      setActive();
-    };
+useEffect(() => {
+  if (activeSprint && activeSprint._id) {
+    getTasksBySprint(activeSprint._id);
+  }
+}, [activeSprint]);
 
-    const getTaskToDisplay=async()=>{
-      await getTasksBySprint(activeSprint!._id)
-      tasks.forEach((task:Itask)=>{
-        switch(task.state){
-          case "todo":
-            todo.push(task);
-          break;
-          case "inprogress":
-            inProgress.push(task);
-          break;
-          case "completed":
-            completed.push(task);
-          break;
-        };
-    });
+useEffect(() => {
+  const todo = tasks.filter(t => t.state === "todo");
+  const inProgress = tasks.filter(t => t.state === "inprogress");
+  const completed = tasks.filter(t => t.state === "completed");
 
-    setTodoTasks(todo);
-    setInProgressTasks(inProgress);
-    setCompletedTask(completed);
-    
-  };
-    getTaskToDisplay();
-  },[activeSprint,sprintId,tasks]);
+  setTodoTasks(todo);
+  setInProgressTasks(inProgress);
+  setCompletedTask(completed);
+}, [tasks]);
 
   return (
     <div className={styles.taskScreenMainContainer}>

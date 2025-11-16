@@ -85,7 +85,6 @@ export const CreateUpdateTask:FC<ICreateUpdateTask> = ({modalStatus}) => {
   });
 
   useEffect(()=>{
-   console.log(errors);
    validate(); 
   },[title,description,deadLine])
 

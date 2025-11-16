@@ -19,7 +19,7 @@ export const BackogsScreen = () => {
       await getBacklogs();
     }
     displayBacklogs();
-  },[backlogs])
+  },[])
   const handleTogglePopUp = (popUpName: string) => {
     setChangePopUpStatus(popUpName); 
   };

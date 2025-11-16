@@ -9,7 +9,10 @@ import { popUpStore } from '../../../store/PopUpsStore';
 import { sprintStore } from '../../../store/SprintStore';
 import { deleteSprint } from '../../../http/sprints';
 import { useNavigate } from 'react-router-dom';
+import { CSS } from '@dnd-kit/utilities';
+import { useSortable } from '@dnd-kit/sortable';
 import Swal from 'sweetalert2';
+import { RxDragHandleDots2 } from 'react-icons/rx';
 
 
 interface ISideBarCard{
@@ -46,12 +49,20 @@ export const SideBarCard:FC<ISideBarCard> = ({sprint}) => {
     }
 
     const navigate=useNavigate();
-    
+    const { attributes, listeners, setNodeRef, transform, transition } = useSortable({
+      id: sprint._id!,
+    });
+    const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+  };
     return (
-      <div className={styles.sideBarCardMainContainer}>
+      <div ref={setNodeRef}
+  style={style}
+  {...attributes} className={styles.sideBarCardMainContainer}>
         
         <div className={`${activeSprint == sprint ? styles["sideBarActiveButton"]:styles["sideBarButtons"]}`} >
-            <h3><FaLayerGroup/></h3>
+            <h3 {...listeners} style={{cursor:"pointer"}}><RxDragHandleDots2 /></h3>
             <h4 style={{cursor: "pointer"}} onClick={()=>{setActiveSprint(sprint);navigate(`/tasks?sprintid=${sprint._id}`)}}>{sprint.title}</h4>
             <h3 onClick={()=>setSeeMore(!seeMore)}><FaArrowDown style={{cursor: "pointer"}}/></h3>
         </div>
