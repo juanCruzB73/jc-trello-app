@@ -60,7 +60,6 @@ useEffect(() => {
         <div className={styles.taskScreenContent}>
             <div className={styles.taskScreenTitle}>
               <h2>{activeSprint?activeSprint?.title:"No sprint selected"}</h2>
-              <button onClick={()=>{setActiveTask(null);handleTogglePopUp("createedittask")}}>Add Todo</button>
               {/*<form action="">
                 {backlogTasks.map(task=>
                   <label key={task.title}>
@@ -74,7 +73,6 @@ useEffect(() => {
                 <p>{activeSprint?.description?activeSprint?.description:"No description given."}</p>
               </div>
             <div className={styles.taskScreenBoardsBackground}>
-
               <div className={styles.taskScreenBoard}>
                 <h2>TO-DO</h2>
                 <div className={styles.taskScreenCardContainer}>
@@ -94,6 +92,9 @@ useEffect(() => {
                 </div>
               </div>
             <div>
+            </div>
+            <div className={styles.createTaskButtonContainer}>
+              <button onClick={()=>{setActiveTask(null);handleTogglePopUp("createedittask")}}>+</button>
             </div>
           </div>
         </div>
