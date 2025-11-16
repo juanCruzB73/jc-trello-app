@@ -32,10 +32,20 @@
     color: white;
     display: flex;
     align-items: center;
-    width: 80%;
+    width: 90%;
     margin-left: 1rem;
     padding-bottom: 1vh;
+    justify-content: space-between;
 }
+
+.sideBarCreateSprintButton{
+    
+}
+
+.sideBarCreateSprintButton svg{
+    vertical-align: middle;
+}
+
 .sideBarTitle h3{
     margin-top: 10px;
     margin-left: 3rem;

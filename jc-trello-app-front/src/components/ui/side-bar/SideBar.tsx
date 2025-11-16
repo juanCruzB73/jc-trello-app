@@ -60,7 +60,7 @@ export const SideBar:FC<ISideBar> = ({sidebarStatus}) => {
       <button onClick={()=>{navigate('/backlogs')}}>Backlogs <FaBookOpen style={{marginLeft:"10px"}}/></button>
         <div className={styles.sideBarTitle}>
           <h2>Your sprints</h2>
-          <h3 onClick={() => {handleTogglePopUp("createeditsprint");setActiveSprint(null)}}><FaPlus /></h3>
+          <div className={styles.sideBarCreateSprintButton} onClick={() => {handleTogglePopUp("createeditsprint");setActiveSprint(null)}}><FaPlus /></div>
         </div>
         <div className={styles.divider}></div>
         <SortableContext
