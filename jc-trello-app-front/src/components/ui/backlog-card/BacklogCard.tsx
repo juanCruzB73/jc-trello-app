@@ -67,11 +67,6 @@ const handleMoveBacklog = async (sprintId: string) => {
   }
 };
 
-
-
-
-  
-
   const handleSelectOption=async(event:React.ChangeEvent<HTMLSelectElement>)=>{
     const value=event.target.value;
     if (value=="") return
