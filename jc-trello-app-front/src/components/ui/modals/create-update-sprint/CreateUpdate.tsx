@@ -20,6 +20,7 @@ interface IformErrors{
 
 const initialState:ISprint={
     title:"",
+    description:"",
     beginLine:"",
     deadLine:"",
     tasks:[]
@@ -40,12 +41,13 @@ export const CreateUpdate:FC<ICreateUpdate> = ({modalStatus}) => {
 
   const [initialStateEdit,setInitialStateEdit]=useState<ISprint>({
     title:activeSprint?activeSprint.title:"",
+    description:activeSprint?activeSprint.description:"",
     beginLine:activeSprint?activeSprint.beginLine:"",
     deadLine:activeSprint?activeSprint.deadLine:"",
     tasks:activeSprint?activeSprint.tasks:[]
   });
 
-  const {title,beginLine,deadLine,onInputChange,onResetForm}=useForm<ISprint>(initialStateEdit);
+  const {title,description,beginLine,deadLine,onInputChange,onResetForm}=useForm<ISprint>(initialStateEdit);
  
     const errorsArray=["please name your sprint#title","please enter the begin line#beginLine","Invalid date format in begin line#beginLine","please enter the dead line#deadLine","Invalid date format in dead line#deadLine","Deadline must be later that the begin line#deadLine"];
 
@@ -59,11 +61,11 @@ export const CreateUpdate:FC<ICreateUpdate> = ({modalStatus}) => {
 
   useEffect(() => {
       validate();
-  }, [title, beginLine,deadLine]);
+  }, [title,beginLine,deadLine]);
 
   const handleCrate=async()=>{
     try{
-      const data={title,beginLine,deadLine,tasks:[]}
+      const data={title,description,beginLine,deadLine,tasks:[]}
       await addSprint(data);
     }catch(err){
       console.error(err);
@@ -72,7 +74,7 @@ export const CreateUpdate:FC<ICreateUpdate> = ({modalStatus}) => {
 
   const handleUpdate=async()=>{
     try{
-      const data:ISprint={_id:activeSprint!._id,title,beginLine,deadLine,tasks:activeSprint!.tasks}
+      const data:ISprint={_id:activeSprint!._id,title,description,beginLine,deadLine,tasks:activeSprint!.tasks}
       await updateSprint(data);
     }catch(err){
       console.error(err);
@@ -112,6 +114,7 @@ export const CreateUpdate:FC<ICreateUpdate> = ({modalStatus}) => {
         <form className={styles.modalForm} onSubmit={handleSubmit}>
           <input type="text" className={`${styles["input-field-sprint"]} ${errors.titleError && wasSubmited ? styles["input-field-sprintinput-error"]:''}`} placeholder='title' name='title' value={title} onChange={onInputChange}/>
           {errors.titleError && <span className={styles.errorMessage}>{errors.titleError}</span>}
+          <input type="text" maxLength={120} className={`${styles["input-field-sprint"]}`} placeholder='Description (optional)' name='description' value={description} onChange={onInputChange}/>
           <input type="date" className={`${styles["input-field-sprint"]} ${errors.beginLineError && wasSubmited ? styles["input-field-sprintinput-error"]:''}`} name='beginLine' value={beginLine} onChange={onInputChange}/>
           {errors.beginLineError && <span className={styles.errorMessage}>{errors.beginLineError}</span>}
           <input type="date" name='deadLine' className={`${styles["input-field-sprint"]} ${errors.deadLineError && wasSubmited ? styles["input-field-sprintinput-error"]:''}`} value={deadLine} onChange={onInputChange}/>
