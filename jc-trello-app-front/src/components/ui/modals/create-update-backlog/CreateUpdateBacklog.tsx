@@ -6,6 +6,8 @@ import { backlogStore } from '../../../../store/BacklogStore';
 import { addBacklog, updateBacklog } from '../../../../http/backlog';
 import {useValidate} from "../../../../hooks/useValidate"
 import Swal from 'sweetalert2';
+import { ImCross } from 'react-icons/im';
+import { FaCheck } from 'react-icons/fa';
 
 
 interface ICreateUpdateBacklog{ modalStatus:boolean;
@@ -93,15 +95,15 @@ export const CreateUpdateBacklog:FC<ICreateUpdateBacklog> = ({modalStatus}) => {
         <div className={styles.createUpdateBacklogContainer}>
           <h1>{activeBacklog?"Edit backlog task":"Create backlog task"}</h1>
           <form className={styles.createeditbacklogFormContainer} onSubmit={handleSubmit}>
-            <input type="text" className={`${styles["input-field-backlog"]} ${errors.titleError ? styles["input-field-backloginput-error"]:''}`} placeholder='title' name='title' value={title} onChange={onInputChange}/>
+            <input type="text" className={`${styles["input-field-backlog"]} ${errors.titleError ? styles["input-field-backloginput-error"]:''}`} placeholder='Task Title' name='title' value={title} onChange={onInputChange}/>
            
             {errors.titleError && <span className={styles.errorMessage}>{errors.titleError}</span>}
-            <input type="text" placeholder='description' name='description' value={description} onChange={onInputChange}/>
+            <input type="text" placeholder='Description (optional)' name='description' value={description} onChange={onInputChange}/>
 
             <div className={styles.taskModalButtons}></div>
             <div className={styles.createeditbacklogButtonContainer}>
-              <button type='submit' >submit</button>
-              <button type='button' onClick={()=>{handleTogglePopUp("createeditbacklog"),setActiveBacklogs(null)}}>cancel</button>
+              <button type='button' onClick={()=>{handleTogglePopUp("createeditbacklog"),setActiveBacklogs(null)}} style={{backgroundColor:"#dd2e37"}}><ImCross /></button>
+              <button type='submit' style={{backgroundColor:"#2fb457"}} ><FaCheck /></button>
             </div>
           </form>
         </div>

@@ -39,15 +39,24 @@
 }
 .createeditbacklogButtonContainer{
     display: flex;
-    justify-content: space-between;
+    justify-content: right;
+    gap:.5vw;
 }
 .createeditbacklogFormContainer button{
-    padding: 1rem;
-    background-color: white;
+    padding: .5rem;
     border: none;
-    width: 40%;
-    align-self: center;
+    width: 15%;
+    align-items: center;
     border-radius: .6rem;
+    font-size: 20px;
+}
+
+.createeditbacklogFormContainer button:hover{
+    cursor:pointer;
+}
+
+.createeditbacklogFormContainer button svg {
+    vertical-align: middle;
 }
 
 .createeditbacklogFormContainer .input-field-sprintinput-error {
