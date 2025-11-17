@@ -7,6 +7,8 @@ import { sprintStore } from '../../../../store/SprintStore';
 import { addSprint, updateSprint } from '../../../../http/sprints';
 import Swal from 'sweetalert2';
 import { useValidate } from '../../../../hooks/useValidate';
+import { FaCheck } from 'react-icons/fa';
+import { ImCross } from 'react-icons/im';
 
 interface ICreateUpdate{
     modalStatus:boolean;
@@ -112,7 +114,7 @@ export const CreateUpdate:FC<ICreateUpdate> = ({modalStatus}) => {
       <div className={styles.modalContainer}>
         <h1>{activeSprint?"Update Sprint":"Create Sprint"}</h1>
         <form className={styles.modalForm} onSubmit={handleSubmit}>
-          <input type="text" className={`${styles["input-field-sprint"]} ${errors.titleError && wasSubmited ? styles["input-field-sprintinput-error"]:''}`} placeholder='title' name='title' value={title} onChange={onInputChange}/>
+          <input type="text" className={`${styles["input-field-sprint"]} ${errors.titleError && wasSubmited ? styles["input-field-sprintinput-error"]:''}`} placeholder='Sprint Title' name='title' value={title} onChange={onInputChange}/>
           {errors.titleError && <span className={styles.errorMessage}>{errors.titleError}</span>}
           <input type="text" maxLength={120} className={`${styles["input-field-sprint"]}`} placeholder='Description (optional)' name='description' value={description} onChange={onInputChange}/>
           <input type="date" className={`${styles["input-field-sprint"]} ${errors.beginLineError && wasSubmited ? styles["input-field-sprintinput-error"]:''}`} name='beginLine' value={beginLine} onChange={onInputChange}/>
@@ -120,8 +122,8 @@ export const CreateUpdate:FC<ICreateUpdate> = ({modalStatus}) => {
           <input type="date" name='deadLine' className={`${styles["input-field-sprint"]} ${errors.deadLineError && wasSubmited ? styles["input-field-sprintinput-error"]:''}`} value={deadLine} onChange={onInputChange}/>
           {errors.deadLineError && <span className={styles.errorMessage}>{errors.deadLineError}</span>}
           <div className={styles.sprintsModalButtons}>
-            <button type='submit' disabled={!buttonState}>Submit</button>
-            <button type='button' onClick={() => {handleTogglePopUp("createeditsprint");setActiveSprint(null);onResetForm();}}>cancel</button>
+            <button type='button' onClick={() => {handleTogglePopUp("createeditsprint");setActiveSprint(null);onResetForm();}} style={{backgroundColor:"#dd2e37"}}><ImCross /></button>
+            <button type='submit' disabled={!buttonState} style={{backgroundColor:"#2fb457"}} ><FaCheck /></button>
           </div>
         </form>
       </div>
