@@ -25,7 +25,7 @@ export const BackogsScreen = () => {
   };
   return (
     <div className={styles.springScreenMainContainer}>
-      <NavBar/>
+      {/* <NavBar/> */}
       <div className={styles.springScreenContentContainer}>
         <SideBar sidebarStatus={popUps[0].popUpState} />
         <div className={styles.springScreenTaskContainer}>

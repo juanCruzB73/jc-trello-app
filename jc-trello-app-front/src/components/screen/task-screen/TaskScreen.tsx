@@ -54,7 +54,7 @@ useEffect(() => {
 
   return (
     <div className={styles.taskScreenMainContainer}>
-      <NavBar/>
+      {/*<NavBar/>*/}
       <div className={styles.taskScreenContentMainContainer}>
         <SideBar sidebarStatus={popUps[0].popUpState} />
         <div className={styles.taskScreenContent}>
