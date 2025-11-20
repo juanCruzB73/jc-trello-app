@@ -1,8 +1,7 @@
 .navBarMainContainer{
     display: flex;
     padding: .4rem;
-    background-image: linear-gradient(to right, #3678db, #42b3e7);
-    background-color: #3e78ce;
+    background-color: #040c14; 
     align-items: center;
     color: white;
     min-height: 5%;
@@ -16,6 +15,7 @@
 
 .navBarMainContainer h2{
     padding-left: 1rem;
+    color: #3e78ce;
 }
 
 
