@@ -50,13 +50,14 @@ export const TaskCard:FC<ITaskCard> = ({task}) => {
         if (value=="") return
         setSelectOption(value);
         console.log(selectOption);
-        await updateTask({...task,state:value})    
+        await updateTask({...task,state:value});
     };
 
     const handleMoveToBacklog=async()=>{
         await addBacklog({title:task.title,description:task.description,state:task.state,deadLine:task.deadLine})
         if(task._id)await deleteTask(task._id)
     };
+
   return (
     <div className={styles.taskCardContainer}>
       <div className={styles.taskCardTitle}><h3>{task.title}</h3></div>

@@ -31,18 +31,21 @@ export const TaskScreen = () => {
   };
 
   useEffect(() => {
-  if (sprintId && !activeSprint) {
+  if (sprintId) {
+    console.log("firing 1");
     getSprintById(sprintId);
   }
 }, [sprintId]);
 
 useEffect(() => {
   if (activeSprint && activeSprint._id) {
+    console.log("firing 2");
     getTasksBySprint(activeSprint._id);
   }
 }, [activeSprint]);
 
 useEffect(() => {
+  console.log("firing 3");
   const todo = tasks.filter(t => t.state === "todo");
   const inProgress = tasks.filter(t => t.state === "inprogress");
   const completed = tasks.filter(t => t.state === "completed");
@@ -50,7 +53,7 @@ useEffect(() => {
   setTodoTasks(todo);
   setInProgressTasks(inProgress);
   setCompletedTask(completed);
-}, [tasks]);
+}, [tasks,activeSprint]);
 
   return (
     <div className={styles.taskScreenMainContainer}>
