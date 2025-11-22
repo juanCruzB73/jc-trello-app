@@ -40,6 +40,7 @@ export const CreateUpdate:FC<ICreateUpdate> = ({modalStatus}) => {
 
   const [buttonState,setButtonState]=useState(false);
   const [wasSubmited,setWasSubmited]=useState(false);
+  const [wasValidated,setWasValidated]=useState(true);
 
   const [initialStateEdit,setInitialStateEdit]=useState<ISprint>({
     title:activeSprint?activeSprint.title:"",
@@ -62,8 +63,8 @@ export const CreateUpdate:FC<ICreateUpdate> = ({modalStatus}) => {
 
 
   useEffect(() => {
-      validate();
-  }, [title,beginLine,deadLine]);
+    if(wasSubmited)validate();    
+  }, [title,beginLine,deadLine,wasSubmited]);
 
   const handleCrate=async()=>{
     try{
@@ -85,7 +86,11 @@ export const CreateUpdate:FC<ICreateUpdate> = ({modalStatus}) => {
 
   const handleSubmit=async(e:FormEvent)=>{
     e.preventDefault();
-    setWasSubmited(true)
+    setWasSubmited(true);
+    console.log("was validated",wasValidated, "button state", buttonState);
+    if(!wasSubmited) setWasSubmited(true);
+    await validate();
+    if(!buttonState)return;
     if(!activeSprint){
       await handleCrate();
       Swal.fire('Done!', 'The Sprint has been added.', 'success');
@@ -115,15 +120,15 @@ export const CreateUpdate:FC<ICreateUpdate> = ({modalStatus}) => {
         <h1>{activeSprint?"Update Sprint":"Create Sprint"}</h1>
         <form className={styles.modalForm} onSubmit={handleSubmit}>
           <input type="text" className={`${styles["input-field-sprint"]} ${errors.titleError && wasSubmited ? styles["input-field-sprintinput-error"]:''}`} placeholder='Sprint Title' name='title' value={title} onChange={onInputChange}/>
-          {errors.titleError && <span className={styles.errorMessage}>{errors.titleError}</span>}
+          {errors.titleError && wasSubmited && <span className={styles.errorMessage}>{errors.titleError}</span>}
           <input type="text" maxLength={120} className={`${styles["input-field-sprint"]}`} placeholder='Description (optional)' name='description' value={description} onChange={onInputChange}/>
           <input type="date" className={`${styles["input-field-sprint"]} ${errors.beginLineError && wasSubmited ? styles["input-field-sprintinput-error"]:''}`} name='beginLine' value={beginLine} onChange={onInputChange}/>
-          {errors.beginLineError && <span className={styles.errorMessage}>{errors.beginLineError}</span>}
+          {errors.beginLineError && wasSubmited && <span className={styles.errorMessage}>{errors.beginLineError}</span>}
           <input type="date" name='deadLine' className={`${styles["input-field-sprint"]} ${errors.deadLineError && wasSubmited ? styles["input-field-sprintinput-error"]:''}`} value={deadLine} onChange={onInputChange}/>
-          {errors.deadLineError && <span className={styles.errorMessage}>{errors.deadLineError}</span>}
+          {errors.deadLineError && wasSubmited && <span className={styles.errorMessage}>{errors.deadLineError}</span>}
           <div className={styles.sprintsModalButtons}>
             <button type='button' onClick={() => {handleTogglePopUp("createeditsprint");setActiveSprint(null);onResetForm();}} style={{backgroundColor:"#dd2e37"}}><ImCross /></button>
-            <button type='submit' disabled={!buttonState} style={{backgroundColor:"#2fb457"}} ><FaCheck /></button>
+            <button type='submit' disabled={!wasValidated} style={{backgroundColor:"#2fb457"}} ><FaCheck /></button>
           </div>
         </form>
       </div>

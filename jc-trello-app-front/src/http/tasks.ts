@@ -20,9 +20,12 @@ export const addTask=async(taskIn:Itask)=>{
         if(!sprint)return;
         const response = await fetch(`${API_URL}/${sprint?._id}/tasks`,{method:"POST",headers: { 'Content-Type': 'application/json' },body:JSON.stringify(taskIn)});
         const data = await response.json();
-        sprint.tasks.push(data.newTask);
-        sprintStore.getState().setUpdateSprint(sprint);
-        sprintStore.getState().setActiveSprint(sprint);
+        console.log(data);
+        if(!data.ok)return;
+        const newSprint:ISprint={...sprint,tasks:[...sprint.tasks,data.newTask]};
+
+        sprintStore.getState().setUpdateSprint(newSprint);
+        sprintStore.getState().setActiveSprint(newSprint);
         return;
     }catch(error){
         console.error(error);
@@ -37,14 +40,7 @@ export const updateTask=async(taskIn:Itask)=>{
         const response = await fetch(`${API_URL}/${sprint?._id}/tasks/${taskIn._id}`,{method:"PUT",headers: { 'Content-Type': 'application/json' },body:JSON.stringify(taskIn)});
         const data = await response.json();
         console.log(data);
-        //const newSprint:ISprint={
-        //    ...sprint,
-        //    tasks: sprint.tasks.map((task:Itask)=>{
-        //        task._id === data.newTask._id ? data.newTask : task
-        //    })
-        //};
-        //console.log(newSprint);
-        
+        if(!data.ok)return;
         const newSprint:ISprint={...sprint,tasks:sprint.tasks.map((task: Itask)=>task._id === taskIn._id ? taskIn : task)};
         sprintStore.getState().setUpdateSprint(newSprint);
         sprintStore.getState().setActiveSprint(newSprint);
