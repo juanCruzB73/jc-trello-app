@@ -12,7 +12,10 @@ import { sprintStore } from '../../../store/SprintStore';
 import { ISprint } from '../../../types/pop-ups/sprints/ISprint';
 import Swal from 'sweetalert2';
 import { addTask } from '../../../http/tasks';
-import { getSprintById, updateSprint } from '../../../http/sprints';
+import { getSprintById } from '../../../http/sprints';
+import { CSS } from '@dnd-kit/utilities';
+import { useSortable } from '@dnd-kit/sortable';
+import { RxDragHandleDots2 } from 'react-icons/rx';
 
 interface IBacklogCard{
   backlog:Itask
@@ -72,10 +75,21 @@ const handleMoveBacklog = async (sprintId: string) => {
     if (value=="") return
     setSelectOption(value);
     await handleMoveBacklog(value)    
-  }
+  };
+
+  const { attributes, listeners, setNodeRef, transform, transition } = useSortable({
+        id: backlog._id!,
+  });
+
+  const style = {
+      transform: CSS.Transform.toString(transform),
+      transition,
+  };
 
   return (
-    <div className={styles.backlogCardMainContainer}>
+    <div className={styles.backlogCardMainContainer} ref={setNodeRef}
+        style={style}
+        {...attributes}>
       <div className={styles.backlogCardTitles}>
       <h3>{backlog.title}</h3>
       <p>{backlog.description?backlog.description:"No description given."}</p>
@@ -90,10 +104,11 @@ const handleMoveBacklog = async (sprintId: string) => {
             }
           </select>
           <div className={styles.backlogCardEditButtons}>
-        <button type='button' className={styles.backlogCardSendToButton} onClick={()=>setSendTo(!sentTo)}>{!sentTo?"Sent to...":"Cancel"} <BsBoxes /></button>
-        <button type='button' className={styles.backlogCardIconButtons} style={{color:"white"}} onClick={()=>{setActiveBacklogs(backlog);handleTogglePopUp("seebacklog")}} ><IoEye /></button>
-        <button type='button' className={styles.backlogCardIconButtons} onClick={()=>{handleTogglePopUp("createeditbacklog");setActiveBacklogs(backlog)}} style={{color:"white"}}><HiPencil /></button>
-        <button type='button' className={styles.backlogCardIconButtons} style={{color:"rgba(233, 11, 11, 0.747) "}} onClick={()=>{backlog._id&&handleDelete(backlog._id)}}><FaRegTrashAlt /></button>
+            <button type='button' className={styles.backlogCardSendToButton} onClick={()=>setSendTo(!sentTo)}>{!sentTo?"Sent to...":"Cancel"} <BsBoxes /></button>
+            <button type='button' className={styles.backlogCardIconButtons} style={{color:"white"}} onClick={()=>{setActiveBacklogs(backlog);handleTogglePopUp("seebacklog")}} ><IoEye /></button>
+            <button type='button' className={styles.backlogCardIconButtons} onClick={()=>{handleTogglePopUp("createeditbacklog");setActiveBacklogs(backlog)}} style={{color:"white"}}><HiPencil /></button>
+            <button type='button' className={styles.backlogCardIconButtons} style={{color:"rgba(233, 11, 11, 0.747) "}} onClick={()=>{backlog._id&&handleDelete(backlog._id)}}><FaRegTrashAlt /></button>
+            <h3 {...listeners} style={{cursor:"pointer"}}><RxDragHandleDots2 /></h3>
         </div>
       </div>
     </div>
