@@ -7,6 +7,7 @@ import { NavBar } from '../../ui/nav-bar/NavBar';
 import { SideBar } from '../../ui/side-bar/SideBar';
 import styles from './backlogScreen.module.css';
 import { getBacklogs } from '../../../http/backlog';
+import { TaskCard } from '../../ui/task-card/TaskCard';
 
 export const BackogsScreen = () => {
   const popUps = popUpStore((state)=>(state.popUps));
@@ -38,8 +39,8 @@ export const BackogsScreen = () => {
           </div>
           <div className={styles.springScreenListTaskContainer}>
             <div className={styles.springScreenListTask}>
-              {backlogs.map((backlog:Itask)=>(
-                <BacklogCard key={backlog._id} backlog={backlog}/>
+              {backlogs.map((task:Itask)=>(
+                <TaskCard key={task._id} task={task}/>
               ))}
               <div className={styles.createTaskButtonContainer}>
                 <button type='button' onClick={()=>{handleTogglePopUp("createeditbacklog");setActiveBacklogs(null)}}>+</button>
