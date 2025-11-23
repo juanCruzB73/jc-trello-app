@@ -10,8 +10,11 @@
     max-width: 20vw;
 }
 .taskCardTitle{
-    width: 80%;
+    width: 90%;
     margin-bottom: .3rem;
+    white-space: nowrap; 
+    overflow: hidden;
+    text-overflow: ellipsis; 
 }
 .taskCardButtonsContainer{
     display: flex;
