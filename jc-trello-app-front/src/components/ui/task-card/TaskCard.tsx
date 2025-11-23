@@ -7,10 +7,12 @@ import { FC, useState } from 'react';
 import { taskStore } from '../../../store/TaskStore';
 import { popUpStore } from '../../../store/PopUpsStore';
 import { deleteTask, updateTask } from '../../../http/tasks';
+import { CSS } from '@dnd-kit/utilities';
+import { useSortable } from '@dnd-kit/sortable';
 import Swal from 'sweetalert2';
+import { RxDragHandleDots2 } from 'react-icons/rx';
 import { BsBoxes } from 'react-icons/bs';
-import { backlogStore } from '../../../store/BacklogStore';
-import { addBacklog, updateBacklog } from '../../../http/backlog';
+import { addBacklog } from '../../../http/backlog';
 
 interface ITaskCard{
   task:Itask
@@ -19,7 +21,6 @@ interface ITaskCard{
 export const TaskCard:FC<ITaskCard> = ({task}) => {
     const setActiveTask = taskStore((state) => (state.setActiveTask));
     const setChangePopUpStatus = popUpStore((state) => (state.setChangePopUpStatus));
-    const backlogTasks = backlogStore((state) => (state.backlogTasks));
     const [selectOption,setSelectOption]=useState("");
     
   
@@ -58,8 +59,21 @@ export const TaskCard:FC<ITaskCard> = ({task}) => {
         if(task._id)await deleteTask(task._id)
     };
 
+    const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
+      id: task._id!,
+    });
+    
+    const style = {
+      transform: CSS.Transform.toString(transform),
+      transition,
+      opacity: isDragging ? 0.5 : 1,
+      cursor: isDragging ? 'grabbing' : 'default',
+    };
+
   return (
-    <div className={styles.taskCardContainer}>
+    <div ref={setNodeRef}
+        style={style}
+        {...attributes} className={styles.taskCardContainer}>
       <div className={styles.taskCardTitle}><h3>{task.title}</h3></div>
       <div className={styles.taskCardButtonsContainer}>
       <select name="selectOption" value={selectOption} onChange={handleSelectOption} className={styles.selectTaskCard}>
@@ -69,6 +83,9 @@ export const TaskCard:FC<ITaskCard> = ({task}) => {
           <option value="completed">COMPLETED</option>
         </select>
         <div className={styles.taskCardButtonDiv}>
+          <h3 {...listeners} {...attributes} style={{ cursor: 'grab', touchAction: 'none' }} title="Drag to move">
+            <RxDragHandleDots2 />
+          </h3>
         <button style={{color:"white",minWidth:"6vw"}} onClick={handleMoveToBacklog}><BsBoxes /> To Backlog</button>
         <button style={{color:"white"}} onClick={()=>{setActiveTask(task);handleTogglePopUp("seetask")}}><IoEye /></button>
         <button style={{color:"white"}} onClick={()=>{setActiveTask(task);handleTogglePopUp("createedittask")}}><HiPencil /></button>

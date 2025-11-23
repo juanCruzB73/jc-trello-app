@@ -48,7 +48,7 @@ export const SideBar:FC<ISideBar> = ({sidebarStatus}) => {
       newOrder.splice(newIndex, 0, moved);
 
       setSprints(newOrder);
-      // Optionally: call backend PATCH /sprints/order with newOrder.map(s => s._id)
+      //todo: call backend sprints with newOrder.map(s => s._id)
     }
   };
 

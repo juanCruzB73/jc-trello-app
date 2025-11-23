@@ -1,4 +1,4 @@
-import { FC, FormEvent, useEffect, useState } from 'react';
+import { FC, FormEvent, useEffect, useRef, useState } from 'react';
 import styles from './createUpdate.module.css';
 import { popUpStore } from '../../../../store/PopUpsStore';
 import { useForm } from '../../../../hooks/useForm';
@@ -59,8 +59,24 @@ export const CreateUpdate:FC<ICreateUpdate> = ({modalStatus}) => {
     setButtonState,
     schemaName: "sprint",
     errorsArray
-});
+  });
 
+  const modalRef = useRef<HTMLDivElement | null>(null);
+
+useEffect(() => {
+  const handleClickOutside = (event: MouseEvent) => {
+    if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
+      fireInvalidInput();
+    }
+  };
+
+  document.addEventListener("mousedown", handleClickOutside);
+  return () => document.removeEventListener("mousedown", handleClickOutside);
+}, []);
+
+  const fireInvalidInput = () => {
+    handleTogglePopUp("createeditsprint")  
+  };
 
   useEffect(() => {
     if(wasSubmited)validate();    
@@ -115,8 +131,8 @@ export const CreateUpdate:FC<ICreateUpdate> = ({modalStatus}) => {
   }
   
   return (
-    <div className={modalStatus?styles.modalMainContainer:styles.modalMainContainerNotShow}>
-      <div className={styles.modalContainer}>
+    <div className={modalStatus?styles.modalMainContainer:styles.modalMainContainerNotShow} id='createUpdateSprintMainContainer'>
+      <div className={styles.modalContainer} id='createUpdateSprintContainer' ref={modalRef}  >
         <h1>{activeSprint?"Update Sprint":"Create Sprint"}</h1>
         <form className={styles.modalForm} onSubmit={handleSubmit}>
           <input type="text" className={`${styles["input-field-sprint"]} ${errors.titleError && wasSubmited ? styles["input-field-sprintinput-error"]:''}`} placeholder='Sprint Title' name='title' value={title} onChange={onInputChange}/>

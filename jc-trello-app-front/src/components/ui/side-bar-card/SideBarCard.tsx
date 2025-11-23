@@ -1,5 +1,4 @@
 import styles from './sideBarCar.module.css';
-import { FaLayerGroup } from "react-icons/fa6";
 import { FaArrowDown } from "react-icons/fa";
 import { HiPencil } from "react-icons/hi2";
 import { FaRegTrashAlt } from "react-icons/fa";
@@ -49,17 +48,19 @@ export const SideBarCard:FC<ISideBarCard> = ({sprint}) => {
     }
 
     const navigate=useNavigate();
+
     const { attributes, listeners, setNodeRef, transform, transition } = useSortable({
       id: sprint._id!,
     });
+
     const style = {
-    transform: CSS.Transform.toString(transform),
-    transition,
-  };
+      transform: CSS.Transform.toString(transform),
+      transition,
+    };
     return (
       <div ref={setNodeRef}
-  style={style}
-  {...attributes} className={styles.sideBarCardMainContainer}>
+        style={style}
+        {...attributes} className={styles.sideBarCardMainContainer}>
         
         <div className={`${activeSprint == sprint ? styles["sideBarActiveButton"]:styles["sideBarButtons"]}`} >
             <h3 {...listeners} style={{cursor:"pointer"}}><RxDragHandleDots2 /></h3>
