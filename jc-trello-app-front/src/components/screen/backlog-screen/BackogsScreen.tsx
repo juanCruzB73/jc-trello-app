@@ -8,6 +8,7 @@ import styles from './backlogScreen.module.css';
 import { getBacklogs } from '../../../http/backlog';
 import { DndContext, DragEndEvent } from '@dnd-kit/core';
 import { SortableContext,rectSortingStrategy } from '@dnd-kit/sortable';
+import { TaskCard } from '../../ui/task-card/TaskCard';
 
 export const BackogsScreen = () => {
   const popUps = popUpStore((state)=>(state.popUps));
@@ -63,9 +64,9 @@ export const BackogsScreen = () => {
                           strategy={rectSortingStrategy}
                         >
                 <div className={styles.springScreenListTask}>
-                  {backlogs.map((backlog:Itask)=>(
-                    <BacklogCard key={backlog._id} backlog={backlog}/>
-                  ))}
+                  {backlogs.map((task:Itask)=>(
+                    <TaskCard key={task._id} task={task}/>
+                    ))}
                   <div className={styles.createTaskButtonContainer}>
                     <button type='button' onClick={()=>{handleTogglePopUp("createeditbacklog");setActiveBacklogs(null)}}>+</button>
                   </div>
