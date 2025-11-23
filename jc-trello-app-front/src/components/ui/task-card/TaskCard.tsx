@@ -76,12 +76,13 @@ export const TaskCard:FC<ITaskCard> = ({task}) => {
         {...attributes} className={styles.taskCardContainer}>
       <div className={styles.taskCardTitle}><h3>{task.title}</h3></div>
       <div className={styles.taskCardButtonsContainer}>
-      <select name="selectOption" value={selectOption} onChange={handleSelectOption} className={styles.selectTaskCard}>
+      {/* <select name="selectOption" value={selectOption} onChange={handleSelectOption} className={styles.selectTaskCard}>
           <option value="">State</option>
           <option value="todo">TODO</option>
           <option value="inprogress">IN PROGRESS</option>
           <option value="completed">COMPLETED</option>
         </select>
+        TODO: Delete later */}
         <div className={styles.taskCardButtonDiv}>
           <h3 {...listeners} {...attributes} style={{ cursor: 'grab', touchAction: 'none' }} title="Drag to move">
             <RxDragHandleDots2 />
