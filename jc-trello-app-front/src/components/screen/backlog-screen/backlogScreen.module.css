@@ -21,7 +21,7 @@
 .springScreenTaskContainerTitles{
     display: flex;
     align-items: center;
-    background-color: #09121d;
+    background-color: #0e131d;
     width: 100%;
     height: 10%; 
     justify-content: center;
@@ -43,7 +43,7 @@
     color: #a3b9e2;
 }
 .springScreenListTaskContainer{
-    background-color: #09121d;
+    background-color: #0e131d;
     align-items: top;
     width: 100%;
     height: 90%;
@@ -52,7 +52,7 @@
     
 }
 .springScreenListTask{
-    background-color: #09121d;
+    background-color: #0e131d;
     display: flex;
     width: 95%;
     height: 85%;
@@ -78,7 +78,7 @@
     align-items: center;
     justify-content: center;
     background-color: #4fc2f7;
-    color:#09121d;
+    color:#0e131d;
     transition: transform 0.15s ease-in-out;
 }
 
