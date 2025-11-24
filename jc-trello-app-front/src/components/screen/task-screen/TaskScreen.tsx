@@ -153,7 +153,7 @@ export const TaskScreen = () => {
               <SortableContext id="todo" items={todoTasks.map(t => t._id!)} strategy={verticalListSortingStrategy}>
                 <DroppableBoard id="todo" title="TO-DO" styles={styles}>
                   {todoTasks.map((task: Itask) => (
-                    <TaskCard task={task} key={task._id} />
+                    <TaskCard task={task} key={task._id} screen='tasks'/>
                   ))}
                 </DroppableBoard>
               </SortableContext>
@@ -161,7 +161,7 @@ export const TaskScreen = () => {
               <SortableContext id="inprogress" items={inProgressTasks.map(t => t._id!)} strategy={verticalListSortingStrategy}>
                 <DroppableBoard id="inprogress" title="IN PROGRESS" styles={styles}>
                   {inProgressTasks.map((task: Itask) => (
-                    <TaskCard task={task} key={task._id} />
+                    <TaskCard task={task} key={task._id} screen='tasks'/>
                   ))}
                 </DroppableBoard>
               </SortableContext>
@@ -169,7 +169,7 @@ export const TaskScreen = () => {
               <SortableContext id="completed" items={completedTasks.map(t => t._id!)} strategy={verticalListSortingStrategy}>
                 <DroppableBoard id="completed" title="COMPLETED" styles={styles}>
                   {completedTasks.map((task: Itask) => (
-                    <TaskCard task={task} key={task._id} />
+                    <TaskCard task={task} key={task._id} screen='tasks'/>
                   ))}
                 </DroppableBoard>
               </SortableContext>
@@ -179,7 +179,7 @@ export const TaskScreen = () => {
               {activeId ? (
                 (() => {
                   const task = tasks.find((t) => t._id === activeId);
-                  return task ? <TaskCard task={task} isOverlay /> : null;
+                  return task ? <TaskCard task={task} isOverlay screen='tasks'/> : null;
                 })()
               ) : null}
             </DragOverlay>

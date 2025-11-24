@@ -1,28 +1,38 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { backlogStore } from '../../../store/BacklogStore';
 import { popUpStore } from '../../../store/PopUpsStore';
 import { Itask } from '../../../types/pop-ups/sprints/ITask';
-import { BacklogCard } from '../../ui/backlog-card/BacklogCard';
 import { SideBar } from '../../ui/side-bar/SideBar';
 import styles from './backlogScreen.module.css';
 import { getBacklogs } from '../../../http/backlog';
 import { DndContext, DragEndEvent } from '@dnd-kit/core';
 import { SortableContext,rectSortingStrategy } from '@dnd-kit/sortable';
 import { TaskCard } from '../../ui/task-card/TaskCard';
+import { taskStore } from '../../../store/TaskStore';
 
 export const BackogsScreen = () => {
+
+  const [backlogsToDisplay,setBacklogsToDisplay]=useState<Itask[]>([]);
+  
+
   const popUps = popUpStore((state)=>(state.popUps));
   const setChangePopUpStatus = popUpStore((state) => (state.setChangePopUpStatus));
   const backlogs = backlogStore((state)=>(state.backlogTasks));
   const setBacklogTasks = backlogStore((state)=>(state.setBacklogTasks));
   const setActiveBacklogs = backlogStore((state)=>(state.setActiveBacklogTasks));
+  const tasks = taskStore((state) => (state.tasks));
 
   useEffect(()=>{
+    console.log("firing");
     const displayBacklogs=async()=>{
       await getBacklogs();
     }
     displayBacklogs();
   },[]);
+
+  useEffect(()=>{
+    setBacklogsToDisplay(backlogs)
+  },[backlogs])
 
   const handleTogglePopUp = (popUpName: string) => {
     setChangePopUpStatus(popUpName); 
@@ -64,8 +74,8 @@ export const BackogsScreen = () => {
                           strategy={rectSortingStrategy}
                         >
                 <div className={styles.springScreenListTask}>
-                  {backlogs.map((task:Itask)=>(
-                    <TaskCard key={task._id} task={task}/>
+                  {backlogsToDisplay.map((task:Itask)=>(
+                    <TaskCard key={task._id} task={task} screen='backlog'/>
                     ))}
                   <div className={styles.createTaskButtonContainer}>
                     <button type='button' onClick={()=>{handleTogglePopUp("createeditbacklog");setActiveBacklogs(null)}}>+</button>

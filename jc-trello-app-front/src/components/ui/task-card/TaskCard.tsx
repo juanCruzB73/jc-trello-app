@@ -13,21 +13,36 @@ import Swal from 'sweetalert2';
 import { RxDragHandleDots2 } from 'react-icons/rx';
 import { BsBoxes } from 'react-icons/bs';
 import { addBacklog } from '../../../http/backlog';
+import { deleteBacklog } from '../../../http/backlog';
+import { backlogStore } from '../../../store/BacklogStore';
+import { sprintStore } from '../../../store/SprintStore';
+import { addTask } from '../../../http/tasks';
+import { getSprintById } from '../../../http/sprints';
+import { ISprint } from '../../../types/pop-ups/sprints/ISprint';
 
 interface ITaskCard {
   task: Itask;
   isOverlay?: boolean;
+  screen:string;
 }
 
-export const TaskCard: FC<ITaskCard> = ({ task, isOverlay }) => {
+export const TaskCard: FC<ITaskCard> = ({ task, isOverlay,screen }) => {
+  
+  const [sentTo,setSendTo]=useState(false);
+  const [selectOption,setSelectOption]=useState("");
+  
   const setActiveTask = taskStore((state) => (state.setActiveTask));
   const setChangePopUpStatus = popUpStore((state) => (state.setChangePopUpStatus));
-  const [selectOption, setSelectOption] = useState("");
+  const setActiveBacklogs = backlogStore((state) => (state.setActiveBacklogTasks));
+  const sprints = sprintStore((state) => (state.sprints));
+  const setActiveSprint = sprintStore((state) => (state.setActiveSprint));
 
-
+  console.log(screen);
+  
   const handleTogglePopUp = (popUpName: string) => {
     setChangePopUpStatus(popUpName);
   };
+
   const handleDelete = async () => {
     Swal.fire({
       title: 'Are you sure?',
@@ -40,19 +55,35 @@ export const TaskCard: FC<ITaskCard> = ({ task, isOverlay }) => {
       cancelButtonText: 'Cancel'
     }).then(async (result) => {
       if (result.isConfirmed) {
-        if (task._id) await deleteTask(task._id);
+        if (task._id && screen=="tasks") await deleteTask(task._id);
+        if (task._id && screen=="backlog") await deleteBacklog(task._id);
         Swal.fire('Deleted!', 'The Task has been removed.', 'success');
       }
     });
   }
 
-  const handleSelectOption = async (event: React.ChangeEvent<HTMLSelectElement>) => {
-    const value = event.target.value;
-    console.log(value);
-    if (value == "") return
-    setSelectOption(value);
-    console.log(selectOption);
-    await updateTask({ ...task, state: value });
+  const handleSelectOption=async(event:React.ChangeEvent<HTMLSelectElement>)=>{
+      const value=event.target.value;
+      if (value=="") return
+      setSelectOption(value);
+      await handleMoveBacklog(value)    
+  };
+
+  const handleMoveBacklog = async (sprintId: string) => {
+    try {
+      const sprint = await getSprintById(sprintId);
+      
+      if (!sprint) {
+        throw new Error("Sprint not found: " + sprintId);
+      }
+      setActiveSprint(sprint);
+      
+      await addTask(task);
+  
+      await deleteBacklog(task._id!);
+    } catch (error) {
+      console.error("Error moving backlog:", error);
+    }
   };
 
   const handleMoveToBacklog = async () => {
@@ -77,20 +108,27 @@ export const TaskCard: FC<ITaskCard> = ({ task, isOverlay }) => {
       {...attributes} className={styles.taskCardContainer}>
       <div className={styles.taskCardTitle}><h3>{task.title}</h3></div>
       <div className={styles.taskCardButtonsContainer}>
-      {/* <select name="selectOption" value={selectOption} onChange={handleSelectOption} className={styles.selectTaskCard}>
-          <option value="">State</option>
-          <option value="todo">TODO</option>
-          <option value="inprogress">IN PROGRESS</option>
-          <option value="completed">COMPLETED</option>
-        </select>
-        TODO: Delete later */}
+       {screen=="backlog" && 
+        <>
+          <select name="selectOption" value={selectOption} onChange={handleSelectOption}  className={sentTo?styles.backlockCardSelect:styles.backlockCardSelectNotShow}>
+          <option value="">Select Sprint</option>
+            {
+              sprints.map((sprint:ISprint)=>(
+                <option key={sprint._id} value={sprint._id}>{sprint.title}</option>
+              ))
+            }
+          </select>
+        </>
+       }
         <div className={styles.taskCardButtonDiv}>
           <h3 {...listeners} {...attributes} style={{ cursor: 'grab', touchAction: 'none' }} title="Drag to move">
             <RxDragHandleDots2 />
           </h3>
-          <button style={{ color: "white", minWidth: "6vw" }} onClick={handleMoveToBacklog}><BsBoxes /> To Backlog</button>
-          <button style={{ color: "white" }} onClick={() => { setActiveTask(task); handleTogglePopUp("seetask") }}><IoEye /></button>
-          <button style={{ color: "white" }} onClick={() => { setActiveTask(task); handleTogglePopUp("createedittask") }}><HiPencil /></button>
+          {
+          screen=="tasks"&&<button style={{ color: "white", minWidth: "6vw" }} onClick={handleMoveToBacklog}><BsBoxes /> To Backlog</button>
+          }
+          <button style={{ color: "white" }} onClick={ screen=="tasks" ? () => { setActiveTask(task); handleTogglePopUp("seetask") }:()=>{setActiveBacklogs(task);handleTogglePopUp("seebacklog")}}><IoEye /></button>
+          <button style={{ color: "white" }} onClick={screen=="tasks" ? () => { setActiveTask(task); handleTogglePopUp("createedittask")}:()=>{handleTogglePopUp("createeditbacklog");setActiveBacklogs(task)}}><HiPencil /></button>
           <button style={{ color: "rgba(233, 11, 11, 0.747) " }} onClick={() => handleDelete()}><FaRegTrashAlt />   </button>
         </div>
       </div>
