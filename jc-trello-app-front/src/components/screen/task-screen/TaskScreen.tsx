@@ -8,10 +8,10 @@ import { TaskCard } from '../../ui/task-card/TaskCard';
 import styles from './taskScreen.module.css';
 import { getTasksBySprint, updateTask } from '../../../http/tasks';
 import { useSearchParams } from 'react-router-dom';
-import { getSprintById } from '../../../http/sprints';
+import { getSprintById, updateSprint } from '../../../http/sprints';
 import { DndContext, DragEndEvent, DragOverlay } from '@dnd-kit/core';
 import { ISprint } from '../../../types/pop-ups/sprints/ISprint';
-import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
+import { SortableContext, verticalListSortingStrategy, arrayMove } from '@dnd-kit/sortable';
 import { DroppableBoard } from './DroppableBoard';
 
 export const TaskScreen = () => {
@@ -72,34 +72,63 @@ export const TaskScreen = () => {
     const activeId = active.id;
     const overId = over.id;
 
+    const activeTask = tasks.find(t => t._id === activeId);
+    if (!activeTask) return;
+
+    let newState = activeTask.state;
+
     // Check if dropped on a board or on another task
-    let newState = null;
     if (overId === "todo" || overId === "inprogress" || overId === "completed") {
       newState = overId;
     } else {
-      // Dropped on another task, find which board it belongs to
-      const targetTask = tasks.find(t => t._id === overId);
-      if (targetTask) {
-        newState = targetTask.state;
+      const overTask = tasks.find(t => t._id === overId);
+      if (overTask) {
+        newState = overTask.state;
       }
     }
 
-    if (!newState) return;
+    if (activeTask.state !== newState) {
+      const updatedTask = { ...activeTask, state: newState };
 
-    const movedTask = tasks.find(t => t._id === activeId);
-    if (!movedTask || movedTask.state === newState) return;
+      // Update backend for task state
+      updateTask(updatedTask);
 
-    const updatedTask = { ...movedTask, state: newState };
-    const newTasks = tasks.map(t =>
-      t._id === activeId ? updatedTask : t
-    );
+      let newTasks = tasks.map(t =>
+        t._id === activeId ? updatedTask : t
+      );
 
-    // Update backend
-    updateTask(updatedTask);
+      // If dropped on a specific task, reorder
+      if (overId !== newState && overId !== activeId) {
+        const oldIndex = newTasks.findIndex(t => t._id === activeId);
+        const newIndex = newTasks.findIndex(t => t._id === overId);
+        if (oldIndex !== -1 && newIndex !== -1) {
+          newTasks = arrayMove(newTasks, oldIndex, newIndex);
+          // Update sprint to persist order
+          const updatedSprint = { ...activeSprint, tasks: newTasks };
+          updateSprint(updatedSprint);
+        }
+      }
 
-    const updatedSprint = { ...activeSprint, tasks: newTasks };
-    setUpdateSprint(updatedSprint);
-    setActiveSprint(updatedSprint);
+      const updatedSprint = { ...activeSprint, tasks: newTasks };
+      setUpdateSprint(updatedSprint);
+      setActiveSprint(updatedSprint);
+      return;
+    }
+
+    // Reordering in the same column
+    if (activeId !== overId) {
+      const oldIndex = tasks.findIndex((t) => t._id === activeId);
+      const newIndex = tasks.findIndex((t) => t._id === overId);
+
+      if (oldIndex !== -1 && newIndex !== -1) {
+        const newTasks = arrayMove(tasks, oldIndex, newIndex);
+        const updatedSprint = { ...activeSprint, tasks: newTasks };
+
+        setUpdateSprint(updatedSprint);
+        setActiveSprint(updatedSprint);
+        updateSprint(updatedSprint);
+      }
+    }
   };
 
   return (

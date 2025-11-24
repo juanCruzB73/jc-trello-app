@@ -27,14 +27,7 @@
     justify-content: center;
     text-align: center;
 }
-.springScreenTaskContainerTitles button{
-    align-self: center;
-    max-width: 5rem;
-    padding: .3rem;
-    background-color: white;
-    border: none;
-    border-radius: .3rem;
-}
+
 .springScreenTaskContainerTitles h2,h4{
     padding-top: 1vh;
     margin-left: 1rem;
@@ -54,10 +47,11 @@
 .springScreenListTask{
     background-color: #0e131d;
     display: flex;
+    flex-wrap: wrap;
     width: 95%;
     height: 85%;
     flex-wrap: wrap;
-    gap:1vw;
+    gap:1rem;
     align-content: baseline;
 }
 
