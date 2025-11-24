@@ -9,9 +9,9 @@ import styles from './taskScreen.module.css';
 import { getTasksBySprint, updateTask } from '../../../http/tasks';
 import { useSearchParams } from 'react-router-dom';
 import { getSprintById } from '../../../http/sprints';
-import { DndContext, DragEndEvent } from '@dnd-kit/core';
+import { DndContext, DragEndEvent, DragOverlay } from '@dnd-kit/core';
 import { ISprint } from '../../../types/pop-ups/sprints/ISprint';
-import { SortableContext, rectSortingStrategy, verticalListSortingStrategy } from '@dnd-kit/sortable';
+import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { DroppableBoard } from './DroppableBoard';
 
 export const TaskScreen = () => {
@@ -147,6 +147,14 @@ export const TaskScreen = () => {
               </SortableContext>
 
             </div>
+            <DragOverlay>
+              {activeId ? (
+                (() => {
+                  const task = tasks.find((t) => t._id === activeId);
+                  return task ? <TaskCard task={task} isOverlay /> : null;
+                })()
+              ) : null}
+            </DragOverlay>
             <div className={styles.createTaskButtonContainer}>
               <button onClick={() => { setActiveTask(null); handleTogglePopUp("createedittask") }}>+</button>
             </div>

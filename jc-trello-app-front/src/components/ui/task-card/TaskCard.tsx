@@ -14,69 +14,70 @@ import { RxDragHandleDots2 } from 'react-icons/rx';
 import { BsBoxes } from 'react-icons/bs';
 import { addBacklog } from '../../../http/backlog';
 
-interface ITaskCard{
-  task:Itask
+interface ITaskCard {
+  task: Itask;
+  isOverlay?: boolean;
 }
 
-export const TaskCard:FC<ITaskCard> = ({task}) => {
-    const setActiveTask = taskStore((state) => (state.setActiveTask));
-    const setChangePopUpStatus = popUpStore((state) => (state.setChangePopUpStatus));
-    const [selectOption,setSelectOption]=useState("");
-    
-  
-    const handleTogglePopUp = (popUpName: string) => {
-      setChangePopUpStatus(popUpName); 
-    };
-    const handleDelete=async()=>{
-      Swal.fire({
-            title: 'Are you sure?',
-            text: 'This action cannot be undone!',
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#d33',
-            cancelButtonColor: '#3085d6',
-            confirmButtonText: 'Yes, delete it!',
-            cancelButtonText: 'Cancel'
-          }).then(async (result) => { 
-            if (result.isConfirmed) {
-              if(task._id) await deleteTask(task._id);
-              Swal.fire('Deleted!', 'The Task has been removed.', 'success');
-            }
-          });
-    }
+export const TaskCard: FC<ITaskCard> = ({ task, isOverlay }) => {
+  const setActiveTask = taskStore((state) => (state.setActiveTask));
+  const setChangePopUpStatus = popUpStore((state) => (state.setChangePopUpStatus));
+  const [selectOption, setSelectOption] = useState("");
 
-    const handleSelectOption=async(event:React.ChangeEvent<HTMLSelectElement>)=>{
-        const value=event.target.value;
-        console.log(value);
-        if (value=="") return
-        setSelectOption(value);
-        console.log(selectOption);
-        await updateTask({...task,state:value});
-    };
 
-    const handleMoveToBacklog=async()=>{
-        await addBacklog({title:task.title,description:task.description,state:task.state,deadLine:task.deadLine})
-        if(task._id)await deleteTask(task._id)
-    };
-
-    const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
-      id: task._id!,
+  const handleTogglePopUp = (popUpName: string) => {
+    setChangePopUpStatus(popUpName);
+  };
+  const handleDelete = async () => {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'This action cannot be undone!',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Yes, delete it!',
+      cancelButtonText: 'Cancel'
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        if (task._id) await deleteTask(task._id);
+        Swal.fire('Deleted!', 'The Task has been removed.', 'success');
+      }
     });
-    
-    const style = {
-      transform: CSS.Transform.toString(transform),
-      transition,
-      opacity: isDragging ? 0.5 : 1,
-      cursor: isDragging ? 'grabbing' : 'default',
-    };
+  }
+
+  const handleSelectOption = async (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const value = event.target.value;
+    console.log(value);
+    if (value == "") return
+    setSelectOption(value);
+    console.log(selectOption);
+    await updateTask({ ...task, state: value });
+  };
+
+  const handleMoveToBacklog = async () => {
+    await addBacklog({ title: task.title, description: task.description, state: task.state, deadLine: task.deadLine })
+    if (task._id) await deleteTask(task._id)
+  };
+
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
+    id: task._id!,
+  });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging && !isOverlay ? 0.5 : 1,
+    cursor: isDragging ? 'grabbing' : 'default',
+  };
 
   return (
     <div ref={setNodeRef}
-        style={style}
-        {...attributes} className={styles.taskCardContainer}>
+      style={style}
+      {...attributes} className={styles.taskCardContainer}>
       <div className={styles.taskCardTitle}><h3>{task.title}</h3></div>
       <div className={styles.taskCardButtonsContainer}>
-      <select name="selectOption" value={selectOption} onChange={handleSelectOption} className={styles.selectTaskCard}>
+        <select name="selectOption" value={selectOption} onChange={handleSelectOption} className={styles.selectTaskCard}>
           <option value="">State</option>
           <option value="todo">TODO</option>
           <option value="inprogress">IN PROGRESS</option>
@@ -86,10 +87,10 @@ export const TaskCard:FC<ITaskCard> = ({task}) => {
           <h3 {...listeners} {...attributes} style={{ cursor: 'grab', touchAction: 'none' }} title="Drag to move">
             <RxDragHandleDots2 />
           </h3>
-        <button style={{color:"white",minWidth:"6vw"}} onClick={handleMoveToBacklog}><BsBoxes /> To Backlog</button>
-        <button style={{color:"white"}} onClick={()=>{setActiveTask(task);handleTogglePopUp("seetask")}}><IoEye /></button>
-        <button style={{color:"white"}} onClick={()=>{setActiveTask(task);handleTogglePopUp("createedittask")}}><HiPencil /></button>
-        <button style={{color:"rgba(233, 11, 11, 0.747) "}} onClick={()=>handleDelete()}><FaRegTrashAlt />   </button>
+          <button style={{ color: "white", minWidth: "6vw" }} onClick={handleMoveToBacklog}><BsBoxes /> To Backlog</button>
+          <button style={{ color: "white" }} onClick={() => { setActiveTask(task); handleTogglePopUp("seetask") }}><IoEye /></button>
+          <button style={{ color: "white" }} onClick={() => { setActiveTask(task); handleTogglePopUp("createedittask") }}><HiPencil /></button>
+          <button style={{ color: "rgba(233, 11, 11, 0.747) " }} onClick={() => handleDelete()}><FaRegTrashAlt />   </button>
         </div>
       </div>
     </div>
