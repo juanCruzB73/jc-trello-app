@@ -9,6 +9,7 @@
     position: relative;
     width: 100%;
     height: 100%;
+    
 
 }
 .springScreenTaskContainer{
@@ -17,6 +18,7 @@
     color: white;
     min-width: 100%;
     height: 100%;
+    
 }
 .springScreenTaskContainerTitles{
     display: flex;
@@ -53,12 +55,15 @@
     flex-wrap: wrap;
     gap:1rem;
     align-content: baseline;
+    justify-content: center;
+    overflow-y: auto;
 }
 
 .createTaskButtonContainer{
     position:fixed;
     bottom: 2vh;
     right:2vw;
+    background-color: transparent;
 }
 
 .createTaskButtonContainer button{
