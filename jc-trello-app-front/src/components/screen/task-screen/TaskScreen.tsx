@@ -77,7 +77,7 @@ export const TaskScreen = () => {
 
     let newState = activeTask.state;
 
-    // Check if dropped on a board or on another task
+    // change state
     if (overId === "todo" || overId === "inprogress" || overId === "completed") {
       newState = overId;
     } else {
@@ -90,14 +90,13 @@ export const TaskScreen = () => {
     if (activeTask.state !== newState) {
       const updatedTask = { ...activeTask, state: newState };
 
-      // Update backend for task state
       updateTask(updatedTask);
 
       let newTasks = tasks.map(t =>
         t._id === activeId ? updatedTask : t
       );
 
-      // If dropped on a specific task, reorder
+      // reorder (same board)
       if (overId !== newState && overId !== activeId) {
         const oldIndex = newTasks.findIndex(t => t._id === activeId);
         const newIndex = newTasks.findIndex(t => t._id === overId);
@@ -151,7 +150,7 @@ export const TaskScreen = () => {
             </div>
             <div className={styles.taskScreenBoardsBackground}>
 
-              <SortableContext id="todo" items={todoTasks.map(t => t._id)} strategy={verticalListSortingStrategy}>
+              <SortableContext id="todo" items={todoTasks.map(t => t._id!)} strategy={verticalListSortingStrategy}>
                 <DroppableBoard id="todo" title="TO-DO" styles={styles}>
                   {todoTasks.map((task: Itask) => (
                     <TaskCard task={task} key={task._id} />
@@ -159,7 +158,7 @@ export const TaskScreen = () => {
                 </DroppableBoard>
               </SortableContext>
 
-              <SortableContext id="inprogress" items={inProgressTasks.map(t => t._id)} strategy={verticalListSortingStrategy}>
+              <SortableContext id="inprogress" items={inProgressTasks.map(t => t._id!)} strategy={verticalListSortingStrategy}>
                 <DroppableBoard id="inprogress" title="IN PROGRESS" styles={styles}>
                   {inProgressTasks.map((task: Itask) => (
                     <TaskCard task={task} key={task._id} />
@@ -167,7 +166,7 @@ export const TaskScreen = () => {
                 </DroppableBoard>
               </SortableContext>
 
-              <SortableContext id="completed" items={completedTasks.map(t => t._id)} strategy={verticalListSortingStrategy}>
+              <SortableContext id="completed" items={completedTasks.map(t => t._id!)} strategy={verticalListSortingStrategy}>
                 <DroppableBoard id="completed" title="COMPLETED" styles={styles}>
                   {completedTasks.map((task: Itask) => (
                     <TaskCard task={task} key={task._id} />
