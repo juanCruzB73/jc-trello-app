@@ -7,6 +7,8 @@ import { addTask, updateTask } from '../../../../http/tasks';
 import { taskStore } from '../../../../store/TaskStore';
 import {useValidate} from "../../../../hooks/useValidate"
 import Swal from 'sweetalert2';
+import { FaCheck } from 'react-icons/fa';
+import { ImCross } from 'react-icons/im';
 
 interface ICreateUpdateTask{
     modalStatus:boolean;
@@ -102,8 +104,8 @@ export const CreateUpdateTask:FC<ICreateUpdateTask> = ({modalStatus}) => {
                   
             {errors.deadLineError && <span className={styles.errorMessage}>{errors.deadLineError}</span>}
                   <div className={styles.taskModalButtons}>
-                      <button>Send</button>
-                      <button type='button' onClick={() => {onResetForm();setActiveTask(null);handleTogglePopUp("createedittask")}}>cancel</button>
+                      <button type='button' onClick={() => {onResetForm();setActiveTask(null);handleTogglePopUp("createedittask")}} style={{backgroundColor:"#dd2e37"}}><ImCross /></button>
+                      <button style={{backgroundColor:"#2fb457"}}><FaCheck /></button>
                   </div>    
               </form>  
           </div>
