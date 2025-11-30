@@ -24,9 +24,10 @@ interface ITaskCard {
   task: Itask;
   isOverlay?: boolean;
   screen:string;
+  isCreate:boolean;
 }
 
-export const TaskCard: FC<ITaskCard> = ({ task, isOverlay,screen }) => {
+export const TaskCard: FC<ITaskCard> = ({ task, isOverlay,screen,isCreate=false }) => {
   
   const [sentTo,setSendTo]=useState(false);
   const [selectOption,setSelectOption]=useState("");
@@ -103,6 +104,40 @@ export const TaskCard: FC<ITaskCard> = ({ task, isOverlay,screen }) => {
   };
 
   return (
+    isCreate
+    ?
+    (<>
+    <form>
+      <div className={styles.taskCardTitle}><input type="text" /></div>
+      <div className={styles.taskCardButtonsContainer}>
+       {screen=="backlog" && 
+        <>
+          <select name="selectOption" value={selectOption} onChange={handleSelectOption}  className={sentTo?styles.backlockCardSelect:styles.backlockCardSelectNotShow}>
+          <option value="">Select Sprint</option>
+            {
+              sprints.map((sprint:ISprint)=>(
+                <option key={sprint._id} value={sprint._id}>{sprint.title}</option>
+              ))
+            }
+          </select>
+        </>
+       }
+        <div className={styles.taskCardButtonDiv}>
+          <h3 {...listeners} {...attributes} style={{ cursor: 'grab', touchAction: 'none' }} title="Drag to move">
+            <RxDragHandleDots2 />
+          </h3>
+          {
+          screen=="tasks"&&<button style={{ color: "white", minWidth: "6vw" }} onClick={handleMoveToBacklog}><BsBoxes /> To Backlog</button>
+          }
+          <button style={{ color: "white" }} onClick={ screen=="tasks" ? () => { setActiveTask(task); handleTogglePopUp("seetask") }:()=>{setActiveBacklogs(task);handleTogglePopUp("seebacklog")}}><IoEye /></button>
+          <button style={{ color: "white" }} onClick={screen=="tasks" ? () => { setActiveTask(task); handleTogglePopUp("createedittask")}:()=>{handleTogglePopUp("createeditbacklog");setActiveBacklogs(task)}}><HiPencil /></button>
+          <button style={{ color: "rgba(233, 11, 11, 0.747) " }} onClick={() => handleDelete()}><FaRegTrashAlt />   </button>
+        </div>
+      </div>
+    </form>
+    </>)
+    :
+    (<>
     <div ref={setNodeRef}
       style={style}
       {...attributes} className={styles.taskCardContainer}>
@@ -133,5 +168,6 @@ export const TaskCard: FC<ITaskCard> = ({ task, isOverlay,screen }) => {
         </div>
       </div>
     </div>
+    </>)
   )
 }
