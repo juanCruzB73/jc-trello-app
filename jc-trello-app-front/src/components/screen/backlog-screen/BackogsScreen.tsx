@@ -4,11 +4,12 @@ import { popUpStore } from '../../../store/PopUpsStore';
 import { Itask } from '../../../types/pop-ups/sprints/ITask';
 import { SideBar } from '../../ui/side-bar/SideBar';
 import styles from './backlogScreen.module.css';
-import { getBacklogs } from '../../../http/backlog';
+import { addBacklog, getBacklogs } from '../../../http/backlog';
 import { DndContext, DragEndEvent } from '@dnd-kit/core';
 import { SortableContext,rectSortingStrategy } from '@dnd-kit/sortable';
 import { TaskCard } from '../../ui/task-card/TaskCard';
 import { taskStore } from '../../../store/TaskStore';
+import { addTask } from '../../../http/tasks';
 
 export const BackogsScreen = () => {
 
@@ -54,6 +55,10 @@ export const BackogsScreen = () => {
       // todo: call backend sprints with newOrder.map(s => s._id)
     }
   };
+
+  const handleAddEmpty=()=>{
+    backlogStore.getState().setAddNewBacklogTasks({title:"",description:"",deadLine:"",state:"todo",isCreate:true});
+  };
     
   return (
     <DndContext onDragEnd={handleDragEnd}>
@@ -78,7 +83,7 @@ export const BackogsScreen = () => {
                     <TaskCard key={task._id} task={task} screen='backlog'/>
                     ))}
                   <div className={styles.createTaskButtonContainer}>
-                    <button type='button' onClick={()=>{handleTogglePopUp("createeditbacklog");setActiveBacklogs(null)}}>+</button>
+                    <button type='button' onClick={()=>{handleAddEmpty();setActiveBacklogs(null)}}>+</button>
                   </div>
                 </div>
             </SortableContext>

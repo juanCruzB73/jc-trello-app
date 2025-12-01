@@ -24,10 +24,9 @@ interface ITaskCard {
   task: Itask;
   isOverlay?: boolean;
   screen:string;
-  isCreate:boolean;
 }
 
-export const TaskCard: FC<ITaskCard> = ({ task, isOverlay,screen,isCreate=false }) => {
+export const TaskCard: FC<ITaskCard> = ({ task, isOverlay,screen }) => {
   
   const [sentTo,setSendTo]=useState(false);
   const [selectOption,setSelectOption]=useState("");
@@ -37,8 +36,6 @@ export const TaskCard: FC<ITaskCard> = ({ task, isOverlay,screen,isCreate=false 
   const setActiveBacklogs = backlogStore((state) => (state.setActiveBacklogTasks));
   const sprints = sprintStore((state) => (state.sprints));
   const setActiveSprint = sprintStore((state) => (state.setActiveSprint));
-
-  console.log(screen);
   
   const handleTogglePopUp = (popUpName: string) => {
     setChangePopUpStatus(popUpName);
@@ -104,7 +101,7 @@ export const TaskCard: FC<ITaskCard> = ({ task, isOverlay,screen,isCreate=false 
   };
 
   return (
-    isCreate
+    task.isCreate
     ?
     (<>
     <form>

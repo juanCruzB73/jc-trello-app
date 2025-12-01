@@ -14,7 +14,7 @@ export const getTasksBySprint=async(idSprint:string)=>{
         console.error(error);
     }
 };
-export const addTask=async(taskIn:Itask)=>{  
+export const addTask=async(taskIn:Itask)=>{     
     try{
         const sprint=sprintStore.getState().activeSprint;
         if(!sprint)return;
