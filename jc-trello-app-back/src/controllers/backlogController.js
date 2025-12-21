@@ -1,9 +1,14 @@
 const Backlog = require("../models/Backlog");
 const Task = require("../models/Task");
+const getAuthorizedBacklog=require("../helpers/getAuthorizedBacklog")
 
 const getBacklogTask=async(req,res)=>{
     try{
-        const backlog = await Backlog.find();
+         const data = await getAuthorizedBacklog(req, res);
+        if (!data) return;
+
+        let { backlog, user } = data;
+
         res.json({
         ok:true,
         backlog:backlog,
@@ -17,56 +22,73 @@ const getBacklogTask=async(req,res)=>{
     };
 }
 
-const addTaskBacklog=async(req,res)=>{
-    let backlog = await Backlog.findOne().populate("tasks");
+const addTaskBacklog = async (req, res) => {
+  try {
+    const data = await getAuthorizedBacklog(req, res);
+    if (!data) return;
+
+    let { backlog, user } = data;
+
+    // Create backlog if it doesn't exist
     if (!backlog) {
-        backlog = new Backlog({ tasks: [] });
-        await backlog.save();
+      backlog = new Backlog({
+        user: user.id,
+        tasks: []
+      });
+      await backlog.save();
     }
-    
-    try{
-        const task = new Task(req.body);
-        await task.save();
-        backlog.tasks.push(task);
-        await backlog.save();
-        res.json({
-            ok:true,
-            msg:"Task saved on Backlog",
-            newTask:task,
-        });
-    }catch(error){
-        console.log(error)
-        res.status(500).json({
-            ok:false,
-            msg:"Internal error"
-        });
-    }
-}
+
+    // Add embedded task
+    const nextIndex =
+      req.body.index ? req.body.index :  (backlog.tasks.length > 0
+        ? Math.max(...backlog.tasks.map(t => t.index)) + 1
+        : 1);
+
+    backlog.tasks.push({
+      ...req.body,
+      index:  nextIndex
+    });
+    await backlog.save();
+
+    res.json({
+      ok: true,
+      msg: "Task saved on Backlog",
+      newTask: backlog.tasks.at(-1)
+    });
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      ok: false,
+      msg: "Internal error"
+    });
+  }
+};
+
 
 const editTaskBacklog=async(req,res)=>{
 
-    const { backlogId, taskId } = req.params;
-    const updatedData = req.body;
-
     try{
-        const backlog=await Backlog.findById(backlogId);
-        if(!backlog)return res.status(404).json({message:"backlog not found"});
+        const { taskId } = req.params;
+        const updatedData = req.body;
+
+        const data = await getAuthorizedBacklog(req, res);
+        if (!data) return;
+
+        let { backlog } = data;
 
         const task = backlog.tasks.id(taskId);
         if(!task)return res.status(404).json({message:"task not found"});
 
-        if (updatedData.title !== undefined) task.title = updatedData.title;
-        if (updatedData.description !== undefined) task.description = updatedData.description;
-        if (updatedData.state !== undefined) task.state = updatedData.state;
-        //if (updatedData.deadLine !== undefined) task.deadLine = updatedData.deadLine;
+        Object.assign(task, updatedData);
 
         await backlog.save();
 
-    res.json({
-        ok:true,
-        msg:"Task saved on Backlog",
-        newTask:task,
-    })
+        res.json({
+            ok:true,
+            msg:"Task saved on Backlog",
+            newTask:task,
+        })
 
     }catch(error){
         console.log(error);
@@ -79,11 +101,12 @@ const editTaskBacklog=async(req,res)=>{
 
 const deleteTaskBacklog=async(req,res)=>{
 
-    const { backlogId, taskId } = req.params;
-
     try{
-        const backlog=await Backlog.findById(backlogId);
-        if(!backlog)return res.status(404).json({message:"backlog not found"});
+        const { taskId } = req.params;
+        const data = await getAuthorizedBacklog(req, res);
+        if (!data) return;
+
+        let { backlog } = data;
 
         const task = backlog.tasks.id(taskId);
         if(!task)return res.status(404).json({message:"task not found"});

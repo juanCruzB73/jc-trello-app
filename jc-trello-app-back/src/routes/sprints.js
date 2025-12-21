@@ -1,7 +1,11 @@
 const { Router } = require("express");
 const { getSprints, addSprint, updateSprint, deleteSprint, getSprintTasks, addSprintTasks, updateSprintTasks, deleteSprintTasks, getSprintsById } = require("../controllers/sprintController");
+const {tokenValidator}=require("../middlewares/tokenValidator");
 
 const router=Router();
+
+router.use(tokenValidator);
+
 
 //main sprint routes
 router.get("/",getSprints);

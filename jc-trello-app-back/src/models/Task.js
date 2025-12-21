@@ -4,7 +4,9 @@ const taskSchema=new mongoose.Schema({
     title:{type:String,required:true},
     description:{type:String},
     state:{type:String,enum:["todo","inprogress","completed"],requires:true},
-    //deadLine:{type:String,required:true},
+    deadLine:{type:String,required:true},
+    user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+    index:{type:Number,required:true}
 });
 
 taskSchema.method("toJSON",function(){

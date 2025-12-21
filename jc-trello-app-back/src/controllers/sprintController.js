@@ -1,210 +1,215 @@
 const Sprint = require("../models/Sprint");
 const Task = require("../models/Task");
+const userFromJwt = require("../helpers/userFromJwt");
+const getAuthorizedSprint = require("../helpers/getAuthorizedSprint");
 
-const getSprints=async(req,res)=>{
-    try{
-        const sprints=await Sprint.find();
-        res.json({
-            ok:true,
-            sprints:sprints,
-        });
-    }catch(error){
-        console.log(error);
-        res.status(500).json({
-            ok:false,
-            msg:"internal error"
-        });
-    }
+
+const getSprints = async (req, res) => {
+  try {
+    const token = req.header("x-token");
+    const user = await userFromJwt(token);
+
+    const sprints = await Sprint.find({ user: user.id });
+
+    res.json({
+      ok: true,
+      sprints
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ ok: false, msg: "Internal error" });
+  }
 };
 
-const getSprintsById=async(req,res)=>{
-    const {sprintId} = req.params;
-    try{
-        const sprint=await Sprint.findById(sprintId);
-        if(!sprint)return res.status(404).json({message:"error finding the sprint"});
-        res.json({
-            ok:true,
-            sprint:sprint,
-        });
-    }catch(error){
-        console.log(error);
-        res.status(500).json({
-            ok:false,
-            msg:"internal error"
-        });
-    }
+
+const getSprintsById = async (req, res) => {
+  try {
+    const data = await getAuthorizedSprint(req, res);
+    if (!data) return;
+
+    res.json({
+      ok: true,
+      sprint: data.sprint
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ ok: false, msg: "Internal error" });
+  }
 };
 
-const addSprint=async(req,res)=>{
-    try{
-        const sprint=new Sprint(req.body);
-        await sprint.save()
-        res.json({
-            ok:true,
-            sprint:sprint,
-        });
-    }catch(error){
-        console.log(error);
-        res.status(500).json({
-            ok:false,
-            msg:"internal error"
-        });
-    }
-};
 
-const updateSprint=async(req,res)=>{
-
-    const { sprintId } = req.params;
+const addSprint = async (req, res) => {
+  try {
+    const token = req.header("x-token");
+    const user = await userFromJwt(token);
     
-    try{
-        const sprint=await Sprint.findByIdAndUpdate(sprintId,req.body);
-        
-        if(!sprint)return res.status(404).json({message:"error finding the sprint"});
-        
-        res.json({
-            ok:true,
-            sprint:req.body,
-            msg:"sprint edited with success"
-        })
-    }catch(error){
-        console.log(error);
-        res.status(500).json({
-            ok:false,
-            msg:"internal error"
-        });
-    }
-};
-
-const deleteSprint=async(req,res)=>{
-
-    const { sprintId } = req.params;
+    const sprints = await Sprint.find({ user: user.id });
     
-    try{
-        const sprint=await Sprint.findByIdAndDelete(sprintId);
-        
-        if(!sprint)return res.status(404).json({message:"error finding the sprint"});
-        
-        res.json({
-            ok:true,
-            sprint:req.body,
-            msg:"sprint edited with success"
-        })
-    }catch(error){
-        console.log(error);
-        res.status(500).json({
-            ok:false,
-            msg:"internal error"
-        });
-    }
+    const nextIndex =
+      req.body.index ? req.body.index :  (sprints.length > 0
+        ? Math.max(...sprints.map(t => t.index)) + 1
+        : 1);
+
+    const sprint = new Sprint({
+      ...req.body,
+      user: user.id,
+      index:nextIndex
+    });
+
+    await sprint.save();
+
+    res.json({
+      ok: true,
+      sprint
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ ok: false, msg: "Internal error" });
+  }
 };
 
-//get sprint tasks
-const getSprintTasks=async(req,res)=>{
+const updateSprint = async (req, res) => {
+  try {
+    const data = await getAuthorizedSprint(req, res);
+    if (!data) return;
 
-    const { sprintId } = req.params;
+    const updatedSprint = await Sprint.findByIdAndUpdate(
+      data.sprint._id,
+      req.body,
+      { new: true, runValidators: true }
+    );
+
+    res.json({
+      ok: true,
+      sprint: updatedSprint,
+      msg: "Sprint edited with success"
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ ok: false, msg: "Internal error" });
+  }
+};
+
+
+
+const deleteSprint = async (req, res) => {
+  try {
+    const data = await getAuthorizedSprint(req, res);
+    if (!data) return;
+
+    await Sprint.findByIdAndDelete(data.sprint._id);
+
+    data.user.sprints.pull(data.sprint._id);
+    await data.user.save();
+
+    res.json({
+      ok: true,
+      msg: "Sprint deleted"
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ ok: false, msg: "Internal error" });
+  }
+};
+
+
+const getSprintTasks = async (req, res) => {
+  try {
+    const data = await getAuthorizedSprint(req, res);
+    if (!data) return;
+
+    res.json({
+      ok: true,
+      sprintTasks: data.sprint.tasks
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ ok: false, msg: "Internal error" });
+  }
+};
+
+
+const addSprintTasks = async (req, res) => {
+  try {
+    const data = await getAuthorizedSprint(req, res);
+    if (!data) return;
+
+    const task = new Task(req.body);
+
+    const nextIndex =
+      req.body.index ? req.body.index :  (data.sprint.tasks.length > 0
+        ? Math.max(...data.sprint.tasks.map(t => t.index)) + 1
+        : 1);
     
-    try{
-        const sprint=await Sprint.findById(sprintId);
-        if(!sprint)return res.status(404).json({message:"error finding the sprint"});
-        res.json({
-            ok:true,
-            sprintTasks:sprint.tasks,
-        });
-    }catch(error){
-        console.log(error);
-        res.status(500).json({
-            ok:false,
-            msg:"internal error"
-        });
-    }
+        console.log(nextIndex)
+    data.sprint.tasks.push({
+      ...req.body,
+      index:  nextIndex
+    });
+
+    await data.sprint.save();
+
+    res.json({
+      ok: true,
+      newTask: task
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ ok: false, msg: "Internal error" });
+  }
 };
 
-const addSprintTasks=async(req,res)=>{
-    const { sprintId } = req.params;
-    try{
-        const sprint=await Sprint.findById(sprintId);
-        
-        if(!sprint)return res.status(404).json({message:"error finding the sprint"});
 
-        const task = new Task(req.body);
+const updateSprintTasks = async (req, res) => {
+  try {
+    const data = await getAuthorizedSprint(req, res);
+    if (!data) return;
 
-        if(!task)return res.status(404).json({message:"error creating the task"});
+    const { taskId } = req.params;
+    const task = data.sprint.tasks.id(taskId);
 
-        sprint.tasks.push(task);
-
-        sprint.save(),
-
-        res.json({
-            ok:true,
-            newTask:task,
-        });
-    }catch(error){
-        console.log(error);
-        res.status(500).json({
-            ok:false,
-            msg:"internal error"
-        });
+    if (!task) {
+      return res.status(404).json({ ok: false, msg: "Task not found" });
     }
+
+    Object.assign(task, req.body);
+    await data.sprint.save();
+
+    res.json({
+      ok: true,
+      task
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ ok: false, msg: "Internal error" });
+  }
 };
 
-const updateSprintTasks=async(req,res)=>{
-    const { sprintId,taskId } = req.params;
-    const updatedData = req.body;
-    try{
-        const sprint=await Sprint.findById(sprintId);
-        
-        if(!sprint)return res.status(404).json({message:"error finding the sprint"});
 
-        const task = sprint.tasks.id(taskId);
+const deleteSprintTasks = async (req, res) => {
+  try {
+    const data = await getAuthorizedSprint(req, res);
+    if (!data) return;
 
-        if(!task)return res.status(404).json({message:"error updating the task"});
+    const { taskId } = req.params;
+    const task = data.sprint.tasks.id(taskId);
 
-        if (updatedData.title !== undefined) task.title = updatedData.title;
-        if (updatedData.description !== undefined) task.description = updatedData.description;
-        if (updatedData.state !== undefined) task.state = updatedData.state;
-        if (updatedData.deadLine !== undefined) task.deadLine = updatedData.deadLine;
-
-        sprint.save(),
-
-        res.json({
-            ok:true,
-            newTask:task,
-        });
-    }catch(error){
-        console.log(error);
-        res.status(500).json({
-            ok:false,
-            msg:"internal error"
-        });
+    if (!task) {
+      return res.status(404).json({ ok: false, msg: "Task not found" });
     }
+
+    data.sprint.tasks.pull(taskId);
+    await data.sprint.save();
+
+    res.json({
+      ok: true,
+      msg: "Task deleted"
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ ok: false, msg: "Internal error" });
+  }
 };
 
-const deleteSprintTasks=async(req,res)=>{
-    const { sprintId,taskId } = req.params;
-    try{
-        const sprint=await Sprint.findById(sprintId);
-        
-        if(!sprint)return res.status(404).json({message:"error removing the sprint"});
-
-        const task = sprint.tasks.id(taskId);
-
-        if(!task)return res.status(404).json({message:"error removing the task"});
-
-        sprint.tasks.pull(taskId);
-
-        sprint.save(),
-
-        res.json({
-            ok:true,
-            newTask:task,
-        });
-    }catch(error){
-        console.log(error);
-        res.status(500).json({
-            ok:false,
-            msg:"internal error"
-        });
-    }
-};
 
 module.exports={getSprints,addSprint,updateSprint,deleteSprint,getSprintTasks,addSprintTasks,updateSprintTasks,deleteSprintTasks,getSprintsById}
