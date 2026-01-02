@@ -1,4 +1,4 @@
-import { Itask } from "./ITask";
+import { ITask } from "./ITask";
 
 export interface ISprint{
     _id?:string;
@@ -6,5 +6,5 @@ export interface ISprint{
     description?:string;
     beginLine:string;
     deadLine:string;
-    tasks:Itask[];
+    tasks:ITask[];
 }
